@@ -125,6 +125,8 @@ nav.rail button[aria-current="step"]{background:var(--surface);color:var(--ink);
 .checkrow{display:flex;gap:8px;align-items:center;font-size:14px;margin-top:10px}
 .checkrow input{accent-color:var(--accent)}
 @media (max-width:860px){.reader{grid-template-columns:1fr}.d-toc{position:static;max-height:none;flex-direction:row;overflow-x:auto}.d-toc button{white-space:nowrap}.d-toch{display:none}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.paper{padding:24px 18px;max-height:none}}
+.standalone{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--mid-soft);border-radius:var(--r);padding:10px 14px;margin:-8px 0 20px;font-size:13.5px}
+.standalone a{text-decoration:none;color:var(--ink)}
 .railnote{font-size:12px;color:var(--muted);margin:16px 10px 0;line-height:1.5}
 main{min-width:0}
 .eyebrow{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
@@ -1889,7 +1891,7 @@ function renderDocs() {
   const run = el("div", { class: "actions", style: "margin-top:20px" });
   if (extracting) run.append(el("button", { type: "button", class: "btn", onclick: () => extracting.ctl.abort() }, "Stop reading"), el("span", { class: "tip", style: "margin:0", id: "exProg", text: extracting.label || "Starting…" }));
   else run.append(el("button", { type: "button", class: "btn primary", disabled: !ready || !sampleFn || docs.some(d => d.status === "reading"), onclick: runExtraction }, "Fill the questionnaire from these sources"),
-    ...(!sampleFn ? [el("span", { class: "tip", style: "margin:0", text: "Reading documents needs Claude, which isn’t available in this view." })] : []));
+    ...(!sampleFn ? [el("span", { class: "tip", style: "margin:0", text: STANDALONE ? "Reading documents with Claude runs in the Claude-hosted version (Open with Claude, above)." : "Reading documents needs Claude, which isn’t available in this view." })] : []));
 
   m.append(el("section", { class: "panel" }, input, zone, docs.length ? list : null, web, run, docMsg ? el("div", { class: "msg" + (docMsg.err ? " err" : ""), text: docMsg.t }) : null));
   if (proposals) m.append(renderProposals());
@@ -2074,12 +2076,12 @@ function renderSample() {
 async function downloadSample() {
   const smp = currentSample();
   if (typeof docx === "undefined") { msg("The document engine didn’t load. Check your connection and reload the page.", true); return; }
-  if (!downloadsNs) { msg("Downloads aren’t available in this view. Open the page in the Claude app or claude.ai to download.", true); return; }
+  if (!canSave()) { msg("Downloads aren’t available in this view. Open the page in the Claude app or claude.ai to download.", true); return; }
   msg("Building the sample document…");
   try {
     const blob = await docx.Packer.toBlob(buildDocx(smp.answers, smp.drafts));
     const c = ctx(smp.answers);
-    await downloadsNs.save({ filename: `SAMPLE - ${(smp.answers.co_short || "Company").replace(/[^\w .-]+/g, "")} - ${c.fmt.file}.docx`, data: blob });
+    await saveFile({ filename: `SAMPLE - ${(smp.answers.co_short || "Company").replace(/[^\w .-]+/g, "")} - ${c.fmt.file}.docx`, data: blob });
     msg("Saved. When Word asks to update fields, choose Yes to fill the table of contents.");
   } catch (e) { msg(e && e.code === "declined" ? "Download cancelled." : "Couldn’t build the sample: " + (e && e.message || e), e && e.code !== "declined"); }
 }
@@ -2251,6 +2253,18 @@ function renderRound(step) {
 /* ---------- Review & generate ---------- */
 const effMode = () => (sampleFn && state.mode !== "quick") ? "ai" : "quick";
 let sampleFn = null, downloadsNs = null, running = null;
+const STANDALONE = !(window.claude && window.claude.use);
+const CLAUDE_URL = "https://claude.ai/artifact/AqZ6FkAQFhVhgUGTcX6KGG";
+const canSave = () => !!downloadsNs || STANDALONE;
+async function saveFile({ filename, data }) {
+  if (downloadsNs) return downloadsNs.save({ filename, data });
+  if (!STANDALONE) throw { code: "unavailable" };
+  const blob = data instanceof Blob ? data : new Blob([data], { type: filename.endsWith(".json") ? "application/json" : "application/octet-stream" });
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  return { status: "saved" };
+}
 const jobState = {}; // key -> {st, words, err}
 function renderReview() {
   const m = $("#main"); m.replaceChildren();
@@ -2272,7 +2286,7 @@ function renderReview() {
   const aiOk = sampleFn !== null, M = effMode();
   const mode = (val, title, sub, dis) => el("label", {}, el("input", { type: "radio", name: "mode", value: val, checked: M === val, disabled: dis, onchange: () => { state.mode = val; save(); renderReview(); } }), el("span", {}, title, el("small", { text: sub })));
   gen.append(el("div", { class: "modes" },
-    mode("ai", "Claude drafts each section", aiOk ? `Full disclosure prose for the ${cur.doc.toLowerCase()}, 21 sections, about 10–15 minutes. Uses your Claude account.` : "Not available in this view.", !aiOk),
+    mode("ai", "Claude drafts each section", aiOk ? `Full disclosure prose for the ${cur.doc.toLowerCase()}, 21 sections, about 10–15 minutes. Uses your Claude account.` : STANDALONE ? "Runs in the Claude-hosted version of this application." : "Not available in this view.", !aiOk),
     mode("quick", "Quick draft from answers", "Instant. Your answers placed under the right headings with standard legends and tables.", false)));
   const est = estimatePages(A(), M === "ai" ? state.drafts : {});
   const drafted = SECTIONS.filter(s => state.drafts[s.key]).length;
@@ -2356,13 +2370,13 @@ function paintWords(k) { const w = document.querySelector(`.jobs li[data-k="${k}
 
 async function downloadDocx() {
   if (typeof docx === "undefined") { msg("The document engine didn’t load. Check your connection and reload the page.", true); return; }
-  if (!downloadsNs) { msg("Downloads aren’t available in this view. Open the page in the Claude app or claude.ai to download.", true); return; }
+  if (!canSave()) { msg("Downloads aren’t available in this view. Open the page in the Claude app or claude.ai to download.", true); return; }
   msg("Building the Word document…");
   try {
     const doc = buildDocx(A(), effMode() === "ai" ? state.drafts : {});
     const blob = await docx.Packer.toBlob(doc);
     const name = ((A().co_short || A().co_name || "Company").replace(/[^\w .-]+/g, "").trim() || "Company") + " - " + FORMATS[fmtKey(A().doc_format)].file + " (Draft).docx";
-    await downloadsNs.save({ filename: name, data: blob });
+    await saveFile({ filename: name, data: blob });
     msg("Saved. When Word asks to update fields, choose Yes to fill the table of contents.");
   } catch (e) {
     msg(e && e.code === "declined" ? "Download cancelled." : e && e.code === "rate_limited" ? "A save prompt is already open. Finish it first." : "Couldn’t build the document: " + (e && e.message || e), e && e.code !== "declined");
@@ -2377,8 +2391,8 @@ async function copyPrompt() {
 
 /* ---------- Header tools ---------- */
 $("#exportBtn").onclick = async () => {
-  if (!downloadsNs) { try { await navigator.clipboard.writeText(JSON.stringify(state.answers, null, 1)); $("#saveState").textContent = "Answers copied to clipboard"; } catch (e) { $("#saveState").textContent = "Export isn’t available in this view"; } return; }
-  try { await downloadsNs.save({ filename: ((A().co_short || "issuer").replace(/[^\w.-]+/g, "_")) + "-ppm-answers.json", data: JSON.stringify({ answers: state.answers, drafts: state.drafts }, null, 1) }); } catch (e) {}
+  if (!canSave()) { try { await navigator.clipboard.writeText(JSON.stringify(state.answers, null, 1)); $("#saveState").textContent = "Answers copied to clipboard"; } catch (e) { $("#saveState").textContent = "Export isn’t available in this view"; } return; }
+  try { await saveFile({ filename: ((A().co_short || "issuer").replace(/[^\w.-]+/g, "_")) + "-ppm-answers.json", data: JSON.stringify({ answers: state.answers, drafts: state.drafts }, null, 1) }); } catch (e) {}
 };
 $("#importBtn").onclick = () => $("#importFile").click();
 $("#importFile").onchange = async e => {
@@ -2396,6 +2410,10 @@ function renderClear(confirming) {
 }
 renderClear(false);
 
+if (STANDALONE) {
+  const w = document.querySelector("header.top");
+  w && w.after(el("div", { class: "standalone" }, el("span", {}, "You’re using the web version. Claude document reading and section drafting run in the Claude-hosted version."), el("a", { href: CLAUDE_URL, target: "_blank", rel: "noopener", class: "btn sm" }, "Open with Claude")));
+}
 function render() { renderRail(); state.step === SAMPLE_STEP ? renderSample() : state.step >= REVIEW ? renderReview() : state.step === 0 ? renderDocs() : renderRound(state.step); }
 render();
 
