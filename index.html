@@ -251,7 +251,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <div class="mark"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 4 L29 27 H22.5 L16 15.5 L9.5 27 H3 Z" fill="var(--accent)"/><path d="M16 19 L19.4 25 H12.6 Z" fill="var(--gold)"/></svg><span class="wm">ApexCapital<b>.Asia</b></span></div>
+      <div class="mark"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 4 L29 27 H22.5 L16 15.5 L9.5 27 H3 Z" fill="var(--accent)"/><path d="M16 19 L19.4 25 H12.6 Z" fill="var(--gold)"/></svg><span class="wm">ApexCapitalAsia<b>.Ltd</b></span></div>
       <h1>Fund Raising Online Application</h1>
       <p>Prepare the offering document for your fundraise and U.S. stock-market listing</p>
     </div>
@@ -270,7 +270,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
     <main id="main"></main>
   </div>
   <footer class="foot">
-    <div><strong>ApexCapital.Asia Ltd</strong> · <a href="https://apexcapital.asia/" target="_blank" rel="noopener">apexcapital.asia</a></div>
+    <div><strong>ApexCapitalAsia.Ltd</strong> · <a href="https://apexcapital.asia/" target="_blank" rel="noopener">apexcapital.asia</a></div>
     <p>This application produces working drafts for review by the issuer, U.S. securities counsel and auditors. It is not legal, tax or investment advice and is not an offer to sell or a solicitation of an offer to buy any securities.</p>
   </footer>
 </div>
@@ -1514,7 +1514,7 @@ function buildDocx(A, drafts) {
   kids.push(new Paragraph({ spacing: { before: c.fmt.prelim ? 200 : 1200, after: 80 }, children: runs(`Date of this ${c.doc}: ${date}`, { size: 20 }) }));
   if (c.fk === "regd") kids.push(P("Memorandum No. ________        Name of Offeree: ______________________________", { run: { size: 20 } }));
   kids.push(new Paragraph({ spacing: { before: 800 }, children: runs("THE SECURITIES OFFERED HEREBY ARE SPECULATIVE AND INVOLVE A HIGH DEGREE OF RISK. SEE “RISK FACTORS” BEGINNING IN SECTION 4.", { size: 18, bold: true }) }));
-  kids.push(new Paragraph({ spacing: { before: 600 }, children: [new TextRun({ text: "Working draft prepared with ApexCapital.Asia Ltd  ·  apexcapital.asia", size: 16, color: "777777" })] }));
+  kids.push(new Paragraph({ spacing: { before: 600 }, children: [new TextRun({ text: "Working draft prepared with ApexCapitalAsia.Ltd  ·  apexcapital.asia", size: 16, color: "777777" })] }));
 
   /* Notices */
   H1(null, "Important Notices");
@@ -1597,7 +1597,7 @@ function buildDocx(A, drafts) {
 
   /* Drafting notes */
   H1(null, `Drafting Notes (not part of the ${c.doc})`);
-  kids.push(P("Prepared with the ApexCapital.Asia Fund Raising Online Application (apexcapital.asia). Remove this page before distribution. It lists open items for the issuer, U.S. securities counsel and the auditors.", { run: { italics: true } }));
+  kids.push(P("Prepared with the ApexCapitalAsia.Ltd Fund Raising Online Application (apexcapital.asia). Remove this page before distribution. It lists open items for the issuer, U.S. securities counsel and the auditors.", { run: { italics: true } }));
   kids.push(new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun("Readiness flags")] }));
   const fl = flagsFor(A); (fl.length ? fl : [{ lvl: "low", t: "No automatic flags raised." }]).forEach(f => kids.push(new Paragraph({ numbering: { reference: "bul", level: 0 }, spacing: { after: 60 }, children: runs(`${f.lvl === "high" ? "High" : f.lvl === "mid" ? "Medium" : "Low"}: ${f.t}`) })));
   kids.push(new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun("Unanswered questionnaire items")] }));
@@ -1612,7 +1612,7 @@ function buildDocx(A, drafts) {
   const empty = () => new Header({ children: [new Paragraph({ children: [] })] });
 
   return new D.Document({
-    creator: "ApexCapital.Asia Ltd — Fund Raising Online Application", description: "Working draft prepared with the ApexCapital.Asia Fund Raising Online Application", title: `${c.co} — ${c.fmt.file}`, features: { updateFields: true },
+    creator: "ApexCapitalAsia.Ltd — Fund Raising Online Application", description: "Working draft prepared with the ApexCapitalAsia.Ltd Fund Raising Online Application", title: `${c.co} — ${c.fmt.file}`, features: { updateFields: true },
     styles: {
       default: { document: { run: { font: "Arial", size: 20, color: INK }, paragraph: { spacing: { after: 120, line: 276 } } } },
       paragraphStyles: [
