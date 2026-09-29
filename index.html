@@ -66,7 +66,7 @@ nav.rail button[aria-current="step"]{background:var(--surface);color:var(--ink);
 .drop span{font-size:13px;color:var(--muted);max-width:60ch}
 #docFiles:focus-visible + .drop{outline:2px solid var(--accent);outline-offset:2px}
 .files{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
-.files li{display:grid;grid-template-columns:minmax(0,1fr) 190px auto 28px;gap:10px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:8px 8px 8px 12px;background:var(--surface)}
+.files li{display:grid;grid-template-columns:minmax(0,1fr) auto 28px;gap:10px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:8px 8px 8px 12px;background:var(--surface)}
 .files .fn{display:flex;flex-direction:column;min-width:0}
 .files .fn strong{font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .files .fn span{font-size:12px;color:var(--muted)}
@@ -84,7 +84,7 @@ nav.rail button[aria-current="step"]{background:var(--surface);color:var(--ink);
 .pv{font-size:13.5px;white-space:pre-wrap;margin-top:2px;overflow-wrap:anywhere}
 .pv-rows{margin:4px 0 0;padding-left:18px;font-size:13px}
 .src{font-size:12px;color:var(--muted);margin-top:4px}
-@media (max-width:560px){.files li{grid-template-columns:minmax(0,1fr) 28px}.files select{grid-column:1/-1;grid-row:2}.files .chip{grid-row:2;justify-self:end}}
+
 .foot{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
 .foot strong{color:var(--ink);font-weight:600}
 .foot a{color:var(--accent)}
@@ -199,6 +199,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .jobs details summary{list-style:none;cursor:pointer}
 .jobs details summary::-webkit-details-marker{display:none}
 .jobs .jb{padding:0 2px 12px 46px}
+.jprev{max-height:420px;overflow:auto;background:#fff;color:#1B2330;border:1px solid var(--line);border-radius:4px;padding:16px 20px;font:13px/1.5 Arial,Helvetica,sans-serif;color-scheme:light}
+.jprev mark{background:#F6E7A8;color:inherit}
 .jobs .jb textarea{min-height:220px;font-size:13px;font-family:var(--mono);line-height:1.5}
 .jobs .jb .actions{margin-top:8px}
 .msg{font-size:13.5px;padding:10px 12px;border-radius:var(--r);background:var(--sunk);margin-top:12px}
@@ -221,7 +223,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .drop span{font-size:13px;color:var(--muted);max-width:60ch}
 #docFiles:focus-visible + .drop{outline:2px solid var(--accent);outline-offset:2px}
 .files{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
-.files li{display:grid;grid-template-columns:minmax(0,1fr) 190px auto 28px;gap:10px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:8px 8px 8px 12px;background:var(--surface)}
+.files li{display:grid;grid-template-columns:minmax(0,1fr) auto 28px;gap:10px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:8px 8px 8px 12px;background:var(--surface)}
 .files .fn{display:flex;flex-direction:column;min-width:0}
 .files .fn strong{font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .files .fn span{font-size:12px;color:var(--muted)}
@@ -239,7 +241,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pv{font-size:13.5px;white-space:pre-wrap;margin-top:2px;overflow-wrap:anywhere}
 .pv-rows{margin:4px 0 0;padding-left:18px;font-size:13px}
 .src{font-size:12px;color:var(--muted);margin-top:4px}
-@media (max-width:560px){.files li{grid-template-columns:minmax(0,1fr) 28px}.files select{grid-column:1/-1;grid-row:2}.files .chip{grid-row:2;justify-self:end}}
+
 .railnote{display:none}
   .grid2{grid-template-columns:1fr}
 }
@@ -251,19 +253,19 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
     <div class="brand">
       <div class="mark"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 4 L29 27 H22.5 L16 15.5 L9.5 27 H3 Z" fill="var(--accent)"/><path d="M16 19 L19.4 25 H12.6 Z" fill="var(--gold)"/></svg><span class="wm">ApexCapital<b>.Asia</b></span></div>
       <h1>Fund Raising Online Application</h1>
-      <p>Online securities offerings for Indo-Pacific growth companies: Reg D PPM, Form S-1 / F-1, Reg A / A+ and Reg CF, with a path to OTCQB, Nasdaq or NYSE</p>
+      <p>Prepare the offering document for your fundraise and U.S. stock-market listing</p>
     </div>
     <div class="tools">
       <span class="save" id="saveState" aria-live="polite"></span>
-      <button class="btn sm" id="exportBtn" type="button">Export answers</button>
-      <button class="btn sm" id="importBtn" type="button">Import answers</button>
+      <button class="btn sm" id="exportBtn" type="button">Save my progress</button>
+      <button class="btn sm" id="importBtn" type="button">Open saved progress</button>
       <input type="file" id="importFile" accept=".json,application/json">
       <span id="clearWrap"></span>
     </div>
   </header>
   <div class="layout">
     <nav class="rail" aria-label="Questionnaire rounds"><ol id="rail"></ol>
-      <p class="railnote">Answers are saved in this browser only. Use Export to keep a copy or move to another device.</p>
+      <p class="railnote">Your answers are saved automatically in this browser. Use “Save my progress” to keep a copy or continue on another computer.</p>
     </nav>
     <main id="main"></main>
   </div>
@@ -280,155 +282,157 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 const F = (id, label, type, o = {}) => ({ id, label, type, ...o });
 
 const ROUNDS = [
-  { id: "r1", short: "Company", title: "Company identity & structure",
-    blurb: "Who the issuer is and how the group is organised. This drives the cover page, the corporate structure section and several risk factors.",
+  { id: "r1", short: "Company", title: "Your company",
+    blurb: "The basics about your company. These go on the cover and in the company overview.",
     fields: [
-      F("co_name", "Legal name of the issuer", "text", { ph: "e.g. Meridian Coldchain Holdings Ltd." }),
-      F("co_short", "Short name used in the document", "text", { ph: "e.g. Meridian", help: "Used as the defined term, e.g. “Meridian” or “the Company”." }),
-      F("co_jurisdiction", "Jurisdiction of incorporation", "text", { ph: "e.g. Cayman Islands" }),
-      F("co_incorp_date", "Date of incorporation", "text", { ph: "e.g. 14 March 2019" }),
-      F("co_structure", "Holding structure", "select", { options: ["Single operating company", "Offshore holding company with operating subsidiaries", "U.S. holding company with foreign subsidiaries", "Other"] }),
-      F("co_structure_desc", "Describe the group structure", "textarea", { ph: "List each entity, its jurisdiction, % ownership and role (holding, operating, IP-holding…).", wide: 1 }),
-      F("co_vie", "Does the group use a VIE / contractual arrangement structure?", "select", { options: ["No", "Yes"] }),
-      F("co_hq", "Registered office and principal executive office", "textarea", { rows: 2 }),
-      F("co_ops_countries", "Countries of operation", "text", { ph: "e.g. Singapore, Malaysia, Vietnam" }),
-      F("co_website", "Website", "text"),
-      F("co_fye", "Fiscal year-end", "text", { ph: "e.g. 31 December" }),
-      F("co_industry", "Industry / sector", "text", { ph: "e.g. Cold-chain logistics technology" }),
-      F("co_stage", "Stage of business", "select", { options: ["Pre-revenue", "Early revenue", "Growth stage", "Profitable"] }),
-      F("co_filer", "Expected SEC filer status", "select", { options: ["U.S. domestic filer", "Foreign Private Issuer", "Not yet determined"] }),
+      F("co_name", "Company’s full legal name", "text", { ph: "e.g. Kaylen Coldchain Holdings Ltd." }),
+      F("co_short", "Short name to use in the document", "text", { ph: "e.g. Kaylen" }),
+      F("co_jurisdiction", "Where is the company registered?", "text", { ph: "e.g. Cayman Islands, Singapore, Delaware" }),
+      F("co_incorp_date", "When was it registered?", "text", { ph: "e.g. 14 March 2019" }),
+      F("co_industry", "What industry are you in?", "text", { ph: "e.g. Cold-chain logistics technology" }),
+      F("co_stage", "Where is the business today?", "select", { options: ["Pre-revenue", "Early revenue", "Growth stage", "Profitable"] }),
+      F("co_ops_countries", "Countries where you operate", "text", { ph: "e.g. Singapore, Malaysia, Vietnam" }),
+      F("co_website", "Website", "text", { ph: "e.g. www.yourcompany.com" }),
+      F("co_hq", "Head office address", "textarea", { rows: 2 }),
+      F("co_fye", "Your financial year ends on", "text", { ph: "e.g. 31 December" }),
+      F("co_structure", "How is your group set up?", "select", { options: ["Single operating company", "Offshore holding company with operating subsidiaries", "U.S. holding company with foreign subsidiaries", "Other"] }),
+      F("co_structure_desc", "List the companies in your group", "textarea", { wide: 1, ph: "Name, country, % owned and what each one does. e.g. Kaylen Pte. Ltd. (Singapore, 100%, main operating company)", when: A => A.co_structure && A.co_structure !== "Single operating company" }),
+      F("co_vie", "Is any part of the business controlled by contract instead of ownership? (a “VIE”, mostly used in China)", "select", { wide: 1, options: ["No", "Yes", "Not sure"] }),
+      F("co_filer", "Expected SEC filer status", "select", { adv: 1, options: ["U.S. domestic filer", "Foreign Private Issuer", "Not yet determined"] }),
     ] },
-  { id: "r2", short: "Business", title: "Business & products",
-    blurb: "What the company does and how it makes money. Write plainly; the drafting step turns this into disclosure language.",
+  { id: "r2", short: "Business", title: "What you do",
+    blurb: "Describe your business in your own words. Short, plain answers are best; we turn them into formal wording.",
     fields: [
-      F("biz_problem", "The problem you solve and for whom", "textarea", { wide: 1 }),
-      F("biz_products", "Products and services", "textarea", { wide: 1 }),
-      F("biz_tech_ip", "Technology and intellectual property (patents, trademarks, licences)", "textarea", { wide: 1 }),
-      F("biz_revenue_model", "Revenue model and pricing", "textarea", { wide: 1 }),
-      F("biz_customers", "Key customers or customer segments", "textarea"),
-      F("biz_concentration", "Customer concentration", "textarea", { ph: "e.g. Top 3 customers = 48% of FY2025 revenue", rows: 3 }),
+      F("biz_problem", "What problem do you solve, and for whom?", "textarea", { wide: 1 }),
+      F("biz_products", "What do you sell?", "textarea", { wide: 1 }),
+      F("biz_revenue_model", "How do you make money, and what do you charge?", "textarea", { wide: 1 }),
+      F("biz_customers", "Who are your main customers?", "textarea"),
+      F("biz_concentration", "How much of your revenue comes from your biggest customers?", "textarea", { ph: "e.g. Top 3 customers = 41% of last year’s revenue", rows: 3 }),
+      F("biz_tech_ip", "Technology, patents or trademarks you own", "textarea"),
       F("biz_suppliers", "Key suppliers and partners", "textarea"),
-      F("biz_milestones", "Milestones achieved to date", "textarea"),
-      F("biz_plan", "12–36 month business plan", "textarea", { wide: 1 }),
+      F("biz_milestones", "What have you achieved so far?", "textarea"),
+      F("biz_plan", "What are your plans for the next 1–3 years?", "textarea", { wide: 1 }),
     ] },
-  { id: "r3", short: "Market", title: "Market & competition",
-    blurb: "Market figures must come with a source. Unsourced numbers will be flagged in the drafting notes.",
+  { id: "r3", short: "Market", title: "Your market",
+    blurb: "Who you sell to and who you compete with. If you quote a market-size figure, say where it comes from.",
     fields: [
-      F("mkt_targets", "Target markets and geographies", "textarea"),
-      F("mkt_size", "Market size (TAM / SAM / SOM) with sources", "textarea", { ph: "e.g. SEA cold-chain market USD 12.4bn in 2025 (Source: …)" }),
-      F("mkt_trends", "Industry trends and growth drivers", "textarea", { wide: 1 }),
-      F("mkt_competitors", "Main competitors", "textarea"),
-      F("mkt_advantages", "Your competitive advantages", "textarea"),
-      F("mkt_regulation", "Industry regulations that apply to the business", "textarea", { wide: 1 }),
+      F("mkt_targets", "Which countries and customer groups do you target?", "textarea"),
+      F("mkt_size", "How big is your market? Include the source of the figure", "textarea", { ph: "e.g. US$12bn in 2025 (Source: name of report)" }),
+      F("mkt_trends", "What trends are helping your business grow?", "textarea", { wide: 1 }),
+      F("mkt_competitors", "Who are your main competitors?", "textarea"),
+      F("mkt_advantages", "Why do customers choose you over them?", "textarea"),
+      F("mkt_regulation", "Rules or licences your industry must follow", "textarea", { wide: 1 }),
     ] },
-  { id: "r4", short: "Management", title: "Management, board & governance",
-    blurb: "Nasdaq and NYSE require a majority-independent board and a three-member independent audit committee (phase-in rules apply on IPO).",
+  { id: "r4", short: "Team", title: "Your team",
+    blurb: "Directors and senior managers. Investors and stock exchanges look closely at who runs the company.",
     fields: [
-      F("mgmt_people", "Directors and executive officers", "rows", { wide: 1,
-        cols: [["name", "Name"], ["title", "Title"], ["age", "Age", "n"], ["indep", "Independent director?", "sel", ["", "Yes", "No", "N/A (officer only)"]], ["bio", "Biography (roles, years, other directorships)", "ta"]] }),
-      F("mgmt_employees", "Headcount (full-time / part-time, by function)", "text"),
-      F("mgmt_committees", "Board committees (current and planned)", "textarea"),
-      F("mgmt_comp", "Executive and director compensation", "textarea"),
-      F("mgmt_esop", "Share option / incentive plan", "textarea"),
-      F("mgmt_agreements", "Employment and service agreements", "textarea"),
+      F("mgmt_people", "Directors and senior managers", "rows", { wide: 1,
+        cols: [["name", "Name"], ["title", "Role"], ["age", "Age", "n"], ["indep", "Independent director? (not staff, not a major shareholder)", "sel", ["", "Yes", "No", "N/A (officer only)"]], ["bio", "Short background: past roles and experience", "ta"]] }),
+      F("mgmt_employees", "How many employees do you have?", "text", { ph: "e.g. 86 full-time" }),
+      F("mgmt_comp", "What do directors and senior managers earn?", "textarea"),
+      F("mgmt_esop", "Employee share or option plan (if any)", "textarea"),
+      F("mgmt_committees", "Board committees (current and planned)", "textarea", { adv: 1 }),
+      F("mgmt_agreements", "Employment and service agreements", "textarea", { adv: 1 }),
     ] },
-  { id: "r5", short: "Capital", title: "Capitalization & ownership",
-    blurb: "Share counts feed the capitalization, ownership and dilution tables. Use the pre-offering position.",
+  { id: "r5", short: "Shares", title: "Shares & past funding",
+    blurb: "Who owns the company today and what you have raised before. Your company secretary or cap table will have these numbers.",
     fields: [
-      F("cap_authorized", "Authorized share capital (by class)", "text", { ph: "e.g. 500,000,000 ordinary shares of US$0.0001 par" }),
-      F("cap_outstanding", "Shares outstanding before the Offering", "number", { ph: "e.g. 40000000" }),
-      F("cap_holders", "Principal shareholders (5% or more) and officers/directors", "rows", { wide: 1,
-        cols: [["holder", "Holder"], ["cls", "Class"], ["shares", "Shares held", "n"]] }),
-      F("cap_convertibles", "Convertible notes, SAFEs, warrants and options outstanding", "textarea", { wide: 1 }),
-      F("cap_rounds", "Prior funding rounds", "rows", { wide: 1,
-        cols: [["date", "Date"], ["instrument", "Instrument"], ["amount", "Amount (US$)", "n"], ["price", "Price per share (US$)", "n"], ["investors", "Investors"]] }),
-      F("cap_valuation", "Pre-money valuation (US$)", "money"),
-      F("cap_valuation_basis", "Basis of valuation", "textarea", { rows: 2 }),
+      F("cap_outstanding", "Total number of shares issued today", "number", { ph: "e.g. 40000000" }),
+      F("cap_holders", "Main shareholders (5% or more), plus directors who own shares", "rows", { wide: 1,
+        cols: [["holder", "Name"], ["cls", "Share type (e.g. Ordinary)"], ["shares", "Number of shares", "n"]] }),
+      F("cap_rounds", "Money raised so far", "rows", { wide: 1,
+        cols: [["date", "When"], ["instrument", "What was issued (shares, notes…)"], ["amount", "Amount raised (US$)", "n"], ["price", "Price per share (US$)", "n"], ["investors", "Who invested"]] }),
+      F("cap_convertibles", "Convertible notes, SAFEs, warrants or options (if any)", "textarea", { wide: 1 }),
+      F("cap_valuation", "Company value before this raise (US$)", "money"),
+      F("cap_valuation_basis", "How did you arrive at that value?", "textarea", { rows: 2 }),
+      F("cap_authorized", "Authorized share capital (by class)", "text", { adv: 1 }),
     ] },
-  { id: "r6", short: "Offering", title: "The offering",
-    blurb: "Start by choosing which document to produce. It sets the cover, legends, section titles and the rules Claude drafts to.",
+  { id: "r6", short: "Raise", title: "Your fundraise",
+    blurb: "How much you want to raise and on what terms. If you are unsure about the type of raise, choose “Not sure” and your adviser will decide.",
     fields: [
-      F("doc_format", "Which document should this produce?", "select", { wide: 1, noExtract: 1, options: ["Reg D — Private Placement Memorandum (Rule 506(b) / 506(c))", "Form S-1 — Registration Statement / Prospectus (U.S. domestic issuer)", "Form F-1 — Registration Statement / Prospectus (foreign private issuer)", "Reg A — Tier 1 Offering Circular (Form 1-A, up to US$20M)", "Reg A+ — Tier 2 Offering Circular (Form 1-A, up to US$75M)", "Reg CF — Form C Offering Statement (up to US$5M)"], help: "Reg D is a private placement. S-1 and F-1 are registered public offerings (F-1 for foreign private issuers). Reg A / A+ and Reg CF are exempt public offerings with size caps. Left blank, the document is a Reg D PPM." }),
-      F("off_security", "Securities offered", "select", { options: ["Ordinary / common shares", "Preferred shares", "Convertible notes", "Units (shares and warrants)", "SAFEs"] }),
-      F("off_security_terms", "Key terms of the securities", "textarea", { ph: "Dividend, conversion, liquidation preference, warrant exercise price and term…", wide: 1 }),
-      F("off_price", "Price per share / unit (US$)", "money"),
-      F("off_min", "Minimum offering amount (US$)", "money"),
-      F("off_max", "Maximum offering amount (US$)", "money"),
-      F("off_min_invest", "Minimum investment per investor (US$)", "money"),
-      F("off_costs", "Estimated offering expenses at maximum (US$)", "money", { help: "Legal, audit, placement fees, escrow. Used for net proceeds and dilution." }),
-      F("off_exemption", "Reg D exemption(s) relied on", "multi", { options: ["Rule 506(b)", "Rule 506(c)", "Regulation S"], help: "Reg D only. Rule 506(b) and 506(c) cannot be combined; Regulation S can run alongside either for non-U.S. investors." }),
-      F("off_portal", "Funding portal / intermediary", "text", { help: "Reg CF only: the SEC-registered funding portal or broker-dealer." }),
-      F("off_escrow", "Escrow arrangements", "text"),
-      F("off_agent", "Placement agent / underwriter", "text"),
-      F("off_agent_fees", "Placement agent compensation", "text", { ph: "e.g. 7% cash fee + 5% warrant coverage" }),
-      F("off_close", "Offering period and closing dates", "text"),
-      F("off_lockup", "Lock-up terms", "text"),
-      F("off_rights", "Investor rights", "textarea", { ph: "Pro-rata, information, registration, tag/drag-along…", wide: 1 }),
+      F("doc_format", "What type of raise is this?", "select", { wide: 1, noExtract: 1, options: ["Not sure yet — my adviser will recommend", "Reg D — Private Placement Memorandum (Rule 506(b) / 506(c))", "Form S-1 — Registration Statement / Prospectus (U.S. domestic issuer)", "Form F-1 — Registration Statement / Prospectus (foreign private issuer)", "Reg A — Tier 1 Offering Circular (Form 1-A, up to US$20M)", "Reg A+ — Tier 2 Offering Circular (Form 1-A, up to US$75M)", "Reg CF — Form C Offering Statement (up to US$5M)"],
+        help: "Private raise from selected investors: Reg D. Public IPO: S-1 (U.S. company) or F-1 (non-U.S. company). Smaller public raise: Reg A / A+. Online crowdfunding: Reg CF." }),
+      F("off_security", "What will investors receive?", "select", { options: ["Ordinary / common shares", "Preferred shares", "Convertible notes", "Units (shares and warrants)", "SAFEs"] }),
+      F("off_security_terms", "Key terms of what investors receive", "textarea", { wide: 1, ph: "e.g. interest rate, conversion discount, warrant price", when: A => A.off_security && A.off_security !== "Ordinary / common shares" }),
+      F("off_price", "Price per share (US$)", "money"),
+      F("off_min", "Minimum amount you need to raise (US$)", "money"),
+      F("off_max", "Maximum amount you want to raise (US$)", "money"),
+      F("off_min_invest", "Smallest investment you will accept (US$)", "money"),
+      F("off_costs", "Rough cost of the raise: legal, audit and fees (US$)", "money", { help: "An estimate is fine." }),
+      F("tax_investors", "Who do you want to invest?", "multi", { options: ["U.S. accredited investors", "Non-U.S. investors (Regulation S)", "Institutional investors", "Family offices"] }),
+      F("off_portal", "Which crowdfunding platform will you use?", "text", { when: A => fmtKey(A.doc_format) === "regcf" }),
+      F("off_agent", "Broker or investment bank helping with this raise (if any)", "text"),
+      F("off_close", "When do you want to complete the raise?", "text", { ph: "e.g. by 31 March 2027" }),
+      F("off_exemption", "Reg D exemption(s) relied on", "multi", { adv: 1, options: ["Rule 506(b)", "Rule 506(c)", "Regulation S"] }),
+      F("off_escrow", "Escrow arrangements", "text", { adv: 1 }),
+      F("off_agent_fees", "Placement agent compensation", "text", { adv: 1 }),
+      F("off_lockup", "Lock-up terms", "text", { adv: 1 }),
+      F("off_rights", "Investor rights", "textarea", { adv: 1 }),
     ] },
-  { id: "r7", short: "Financials", title: "Use of proceeds & financials",
-    blurb: "Enter figures in US dollars. Leave any unknown cell blank; it becomes a placeholder.",
+  { id: "r7", short: "Numbers", title: "Money & numbers",
+    blurb: "Figures from your accounts, in US dollars. Leave anything you don’t have blank.",
     fields: [
-      F("uop_rows", "Use of proceeds", "rows", { wide: 1,
-        cols: [["purpose", "Purpose"], ["min", "At minimum (US$)", "n"], ["max", "At maximum (US$)", "n"]] }),
-      F("fin_auditor", "Auditor", "text"),
-      F("fin_pcaob", "Is the auditor PCAOB-registered?", "select", { options: ["Yes", "No", "Auditor not yet engaged"] }),
-      F("fin_years", "Historical financials (annual and interim)", "rows", { wide: 1,
-        cols: [["period", "Period"], ["revenue", "Revenue", "n"], ["gp", "Gross profit", "n"], ["ni", "Net income (loss)", "n"], ["assets", "Total assets", "n"], ["liab", "Total liabilities", "n"], ["equity", "Shareholders' equity", "n"]] }),
-      F("fin_cash", "Cash at latest balance sheet (US$)", "money"),
-      F("fin_debt", "Total debt (US$)", "money"),
-      F("fin_burn", "Average monthly burn (US$)", "money"),
-      F("fin_ntbv", "Net tangible book value (US$)", "money", { help: "Total assets less intangibles less liabilities. Used for dilution." }),
-      F("fin_going_concern", "Going-concern paragraph in the audit report?", "select", { options: ["No", "Yes"] }),
-      F("fin_mdna_notes", "Drivers of results (revenue, margins, costs, one-offs)", "textarea", { wide: 1 }),
-      F("fin_projections", "Projections (3–5 years)", "rows", { wide: 1,
-        cols: [["year", "Year"], ["revenue", "Revenue (US$)", "n"], ["ebitda", "EBITDA (US$)", "n"], ["ni", "Net income (US$)", "n"]] }),
-      F("fin_assumptions", "Key assumptions behind the projections", "textarea", { wide: 1 }),
+      F("uop_rows", "How will you use the money raised?", "rows", { wide: 1,
+        cols: [["purpose", "What for"], ["min", "If you raise the minimum (US$)", "n"], ["max", "If you raise the maximum (US$)", "n"]] }),
+      F("fin_years", "Results from your accounts (one row per year)", "rows", { wide: 1,
+        cols: [["period", "Year (e.g. FY2025)"], ["revenue", "Revenue", "n"], ["gp", "Gross profit", "n"], ["ni", "Net profit (use − for a loss)", "n"], ["assets", "Total assets", "n"], ["liab", "Total liabilities", "n"], ["equity", "Shareholders’ equity", "n"]] }),
+      F("fin_mdna_notes", "What explains the changes in your results?", "textarea", { wide: 1, ph: "e.g. revenue grew 52% because we added 40 customers; margins improved as software sales grew" }),
+      F("fin_cash", "Cash in the bank today (US$)", "money"),
+      F("fin_debt", "Total loans and borrowings (US$)", "money"),
+      F("fin_burn", "Average monthly cash burn, if loss-making (US$)", "money"),
+      F("fin_auditor", "Who audits your accounts?", "text"),
+      F("fin_pcaob", "Is your auditor registered with the PCAOB (the U.S. audit regulator)?", "select", { options: ["Yes", "No", "Not sure", "Auditor not yet engaged"] }),
+      F("fin_going_concern", "Did your auditor raise doubts about the company’s ability to keep operating (a “going concern” note)?", "select", { wide: 1, options: ["No", "Yes", "Not sure"] }),
+      F("fin_projections", "Your forecast (next 3–5 years)", "rows", { wide: 1,
+        cols: [["year", "Year"], ["revenue", "Revenue (US$)", "n"], ["ebitda", "EBITDA (US$)", "n"], ["ni", "Net profit (US$)", "n"]] }),
+      F("fin_assumptions", "What is the forecast based on?", "textarea", { wide: 1 }),
+      F("fin_ntbv", "Net tangible book value (US$)", "money", { adv: 1 }),
     ] },
-  { id: "r8", short: "Listing", title: "Path to public listing",
-    blurb: "These answers drive the listing gap analysis against the standards of your target venue.",
+  { id: "r8", short: "Listing", title: "Going public",
+    blurb: "Where and when you hope to list. We compare your answers with the exchange’s requirements and show any gaps.",
     fields: [
-      F("lst_venue", "Target venue", "select", { options: ["OTCQB", "Nasdaq Capital Market", "Nasdaq Global Market", "NYSE American", "NYSE", "OTCQB, then uplist to Nasdaq", "OTCQB, then uplist to NYSE American"] }),
-      F("lst_route", "Listing route", "select", { options: ["S-1 / F-1 registered IPO", "Form 10 registration + Form 211 (OTC)", "Regulation A+ Tier 2", "Direct listing", "Reverse merger / SPAC"] }),
-      F("lst_restrictive", "Is the business principally administered in mainland China, Hong Kong or Macau?", "select", { options: ["No", "Yes"], help: "Nasdaq’s Restrictive Market rule then requires a US$25M minimum (or 25% of post-offering market value) firm-commitment raise." }),
-      F("lst_timeline", "Listing timeline", "rows", { wide: 1, cols: [["step", "Milestone"], ["date", "Target date"]] }),
-      F("lst_counsel", "U.S. securities counsel", "text"),
-      F("lst_uw", "Underwriter / investment bank", "text"),
-      F("lst_ta", "Transfer agent", "text"),
-      F("lst_mm", "Market maker (Form 211 / Rule 15c2-11)", "text"),
-      F("lst_dtc", "DTC eligibility status", "text"),
-      F("lst_price_est", "Expected share price at listing (US$)", "money"),
-      F("lst_holders_est", "Expected round-lot shareholders at listing", "number"),
-      F("lst_float_est", "Expected market value of unrestricted public float (US$)", "money", { help: "For Nasdaq and NYSE American IPOs this must come from offering proceeds alone." }),
-      F("lst_mvls_est", "Expected market capitalisation at listing (US$)", "money"),
+      F("lst_venue", "Where do you want to list?", "select", { options: ["Not sure yet", "OTCQB", "Nasdaq Capital Market", "Nasdaq Global Market", "NYSE American", "NYSE", "OTCQB, then uplist to Nasdaq", "OTCQB, then uplist to NYSE American"] }),
+      F("lst_restrictive", "Is the business mainly run from mainland China, Hong Kong or Macau?", "select", { options: ["No", "Yes"], help: "Nasdaq has extra requirements for these companies." }),
+      F("lst_price_est", "Expected share price when listed (US$)", "money"),
+      F("lst_holders_est", "Expected number of shareholders when listed", "number"),
+      F("lst_float_est", "How much do you plan to raise from public investors when you list (US$)?", "money", { help: "Nasdaq and NYSE American generally need at least US$15M raised from new public investors." }),
+      F("lst_timeline", "Target dates", "rows", { wide: 1, cols: [["step", "Step (e.g. audit complete, listing)"], ["date", "Target date"]] }),
+      F("lst_counsel", "Your U.S. lawyer (if appointed)", "text"),
+      F("lst_uw", "Your investment bank or underwriter (if appointed)", "text"),
+      F("lst_route", "Listing route", "select", { adv: 1, options: ["S-1 / F-1 registered IPO", "Form 10 registration + Form 211 (OTC)", "Regulation A+ Tier 2", "Direct listing", "Reverse merger / SPAC"] }),
+      F("lst_ta", "Transfer agent", "text", { adv: 1 }),
+      F("lst_mm", "Market maker", "text", { adv: 1 }),
+      F("lst_dtc", "DTC eligibility status", "text", { adv: 1 }),
+      F("lst_mvls_est", "Expected market capitalisation at listing (US$)", "money", { adv: 1 }),
     ] },
-  { id: "r9", short: "Legal & risk", title: "Risks, legal & compliance",
-    blurb: "Anything disclosed here is better than anything discovered later. Rule 506(d) bad-actor events disqualify the offering.",
+  { id: "r9", short: "Legal & risks", title: "Legal & risks",
+    blurb: "Being open here protects you. Problems disclosed now are far easier to deal with than problems found later.",
     fields: [
-      F("leg_litigation", "Litigation (pending or threatened)", "textarea"),
-      F("leg_licences", "Regulatory licences and approvals held", "textarea"),
-      F("leg_rpt", "Related-party transactions", "textarea", { wide: 1 }),
-      F("leg_contracts", "Material contracts", "textarea"),
-      F("leg_data", "Data privacy and cybersecurity", "textarea"),
-      F("leg_sanctions", "Sanctions or export-control exposure", "textarea"),
-      F("leg_badactor", "Any Rule 506(d) bad-actor event for a covered person?", "select", { options: ["No — checked", "Yes", "Not yet checked"] }),
-      F("leg_badactor_detail", "Bad-actor details (if any)", "textarea", { rows: 2 }),
-      F("leg_keyperson", "Key-person dependencies", "textarea"),
-      F("leg_fx", "Currency exposure", "textarea", { rows: 2 }),
-      F("leg_other_risks", "Other risks the board has identified", "textarea", { wide: 1 }),
+      F("leg_litigation", "Any lawsuits or disputes, current or threatened?", "textarea"),
+      F("leg_licences", "Licences and approvals you hold", "textarea"),
+      F("leg_rpt", "Any deals between the company and its directors, shareholders or their families?", "textarea", { wide: 1, ph: "e.g. the office is rented from a company owned by the CEO" }),
+      F("leg_contracts", "Your most important contracts", "textarea"),
+      F("leg_data", "How do you protect customer data?", "textarea"),
+      F("leg_keyperson", "Which people is the business most dependent on?", "textarea"),
+      F("leg_sanctions", "Any business with sanctioned countries or people?", "textarea", { rows: 2 }),
+      F("leg_badactor", "Has any director, officer or major shareholder been convicted of fraud, sanctioned by a regulator, or barred by a court from the securities business?", "select", { wide: 1, options: ["No", "Yes", "Not sure"] }),
+      F("leg_badactor_detail", "Please give details", "textarea", { wide: 1, rows: 2, when: A => A.leg_badactor === "Yes" }),
+      F("leg_other_risks", "Any other risks investors should know about?", "textarea", { wide: 1 }),
+      F("leg_fx", "Currency exposure", "textarea", { adv: 1 }),
     ] },
-  { id: "r10", short: "Closing", title: "Tax, distribution & closing details",
-    blurb: "The last details for the subscription and legal sections. Payment instructions go in the Subscription Agreement, not here.",
+  { id: "r10", short: "Finish", title: "Final details",
+    blurb: "Two last questions, then review your answers and create your document.",
     fields: [
-      F("tax_company_res", "Tax residence of the company and main subsidiaries", "text"),
-      F("tax_investors", "Target investor base", "multi", { options: ["U.S. accredited investors", "Non-U.S. investors (Regulation S)", "Institutional investors", "Family offices"] }),
-      F("tax_notes", "Known tax matters (PFIC, withholding, incentives)", "textarea"),
-      F("dist_subscribe", "Subscription procedure", "textarea", { ph: "e.g. Complete Subscription Agreement and Investor Questionnaire, wire funds to escrow…", wide: 1 }),
-      F("dist_contact", "Investor contact (name, email, phone)", "text"),
-      F("dist_law", "Governing law", "text"),
-      F("dist_date", "Date of the document", "text", { ph: "e.g. 1 October 2026" }),
-      F("dist_exhibits", "Additional exhibits to list", "textarea", { rows: 3 }),
+      F("tax_company_res", "Where does the company (and its main subsidiaries) pay tax?", "text", { wide: 1 }),
+      F("dist_contact", "Who should investors contact? (name, email, phone)", "text", { wide: 1 }),
+      F("tax_notes", "Known tax matters", "textarea", { adv: 1 }),
+      F("dist_subscribe", "Subscription procedure", "textarea", { adv: 1 }),
+      F("dist_law", "Governing law", "text", { adv: 1 }),
+      F("dist_date", "Date of the document", "text", { adv: 1 }),
+      F("dist_exhibits", "Additional exhibits to list", "textarea", { adv: 1 }),
     ] },
 ];
+const isVisible = (f, A) => !f.adv && (!f.when || f.when(A));
 
 
 /* ---------- Output formats ---------- */
@@ -480,7 +484,7 @@ const VENUES = {
   "NYSE": { price: 4, holders: 400, mvuphs: 40e6, equity: null, label: "NYSE",
     notes: "400 round-lot holders; 1,100,000 public shares; MVPHS US$40M for IPOs; price US$4; Earnings test (US$10M aggregate pre-tax over 3 years, ≥US$2M in each of last 2) or Global Market Cap test (US$200M)." },
 };
-const venueKey = v => !v ? null : v.includes("uplist to Nasdaq") ? "Nasdaq Capital Market" : v.includes("uplist to NYSE American") ? "NYSE American" : v;
+const venueKey = v => !v || v.startsWith("Not sure") ? null : v.includes("uplist to Nasdaq") ? "Nasdaq Capital Market" : v.includes("uplist to NYSE American") ? "NYSE American" : v;
 
 const VENUE_TABLE = [
   ["Criterion", "OTCQB", "Nasdaq Capital Market", "NYSE American", "NYSE"],
@@ -539,7 +543,7 @@ const EXAMPLE = {
   lst_venue: "OTCQB, then uplist to Nasdaq", lst_route: "S-1 / F-1 registered IPO", lst_restrictive: "No",
   lst_timeline: [ { step: "PCAOB audit of FY2024–FY2025", date: "Q4 2026" }, { step: "Confidential F-1 submission", date: "Q1 2027" }, { step: "OTCQB quotation", date: "Q2 2027" }, { step: "Nasdaq uplisting application", date: "Q1 2028" } ],
   lst_price_est: "4.00", lst_holders_est: "320", lst_float_est: "16000000", lst_mvls_est: "120000000",
-  leg_badactor: "No — checked", tax_company_res: "Singapore (operating subsidiary); Cayman Islands (holding, no tax)",
+  leg_badactor: "No", tax_company_res: "Singapore (operating subsidiary); Cayman Islands (holding, no tax)",
   tax_investors: ["U.S. accredited investors", "Non-U.S. investors (Regulation S)"], dist_law: "Laws of the Cayman Islands", dist_date: "1 October 2026",
 };
 
@@ -610,7 +614,7 @@ const SAMPLE_ANSWERS = {
   leg_contracts: "Master services agreements with the three largest customers (terms of 2–3 years); manufacturing agreement with the Penang contract manufacturer; cloud-hosting agreement; the Kuala Lumpur lease.",
   leg_data: "KaylenOS processes shipment and location data, and limited personal data of customer staff. Kaylen complies with Singapore's and Malaysia's personal data protection laws and targets ISO/IEC 27001 certification in 2027. No material data breach has occurred.",
   leg_sanctions: "No business with sanctioned countries or persons. KaylenTrack is not a controlled item.",
-  leg_badactor: "No — checked", leg_badactor_detail: "",
+  leg_badactor: "No", leg_badactor_detail: "",
   leg_keyperson: "Daniel Koh (customer relationships and strategy) and Chua Wei Ling (product and engineering). No key-person insurance yet; the Company intends to obtain it after the Offering.",
   leg_fx: "Revenue and costs are mostly in Singapore dollars and Malaysian ringgit; the Company reports in US dollars. No hedging.",
   leg_other_risks: "Dependence on a single contract manufacturer; refrigeration equipment failure at a micro-hub; slower adoption in Vietnam than planned.",
@@ -1157,7 +1161,11 @@ function ctx(A) {
   const short = isBlank(A.co_short) ? "the Company" : A.co_short.trim();
   const price = numOf(A.off_price), min = numOf(A.off_min), max = numOf(A.off_max), out = numOf(A.cap_outstanding);
   const sharesMin = price && min ? min / price : null, sharesMax = price && max ? max / price : null;
-  const ex = Array.isArray(A.off_exemption) ? A.off_exemption : [];
+  let ex = Array.isArray(A.off_exemption) ? A.off_exemption : [];
+  if (!ex.length && Array.isArray(A.tax_investors)) {
+    if (A.tax_investors.some(x => x !== "Non-U.S. investors (Regulation S)")) ex = ["Rule 506(b)"];
+    if (A.tax_investors.includes("Non-U.S. investors (Regulation S)")) ex = [...ex, "Regulation S"];
+  }
   const ceo = rowsOf(A, "mgmt_people")[0];
   const fk = fmtKey(A.doc_format), fmt = FORMATS[fk];
   const basis = fk === "regd" ? (ex.length ? ex.join(" and ") : TBP("Reg D exemption")) : fk === "s1" ? "a registration statement on Form S-1 under the Securities Act" : fk === "f1" ? "a registration statement on Form F-1 under the Securities Act" : fk === "rega1" ? "Tier 1 of Regulation A" : fk === "rega2" ? "Tier 2 of Regulation A (Regulation A+)" : "Regulation Crowdfunding (Section 4(a)(6) of the Securities Act)";
@@ -1170,40 +1178,43 @@ function flagsFor(A) {
   const add = (lvl, t) => f.push({ lvl, t });
   const US_RE = /united states|\bu\.?s\.?a?\b|delaware|nevada|wyoming|florida|texas|california|new york|colorado|utah|washington|massachusetts|new jersey|illinois|georgia|arizona|oregon|minnesota|virginia|maryland/i, CA_RE = /canada|ontario|british columbia|alberta|quebec|manitoba|saskatchewan|nova scotia|new brunswick/i;
   const jur = A.co_jurisdiction || "";
-  if (c.fk === "regd" && !c.ex.length) add("mid", "No Reg D exemption is selected (Rule 506(b) or 506(c), with or without Regulation S).");
-  if (c.fmt.cap && c.max != null && c.max > c.fmt.cap) add("high", `The maximum offering of ${usd(c.max)} exceeds the ${usd(c.fmt.cap)} 12-month limit for ${c.fmt.label.split(" — ")[0]}.`);
-  if (c.fmt.rega && jur && !(US_RE.test(jur) || CA_RE.test(jur))) add("high", `Regulation A is only available to issuers organised in, and with their principal place of business in, the U.S. or Canada. A ${jur} issuer would need a U.S. or Canadian issuing entity.`);
-  if (c.fmt.cf && jur && !US_RE.test(jur)) add("high", `Regulation Crowdfunding is only available to issuers organised under U.S. law. A ${jur} issuer would need a U.S. issuing entity.`);
-  if (c.fk === "f1" && A.co_filer === "U.S. domestic filer") add("mid", "Form F-1 is for foreign private issuers, but the filer status is set to U.S. domestic filer. Use Form S-1 or confirm FPI status.");
-  if (c.fk === "s1" && A.co_filer === "Foreign Private Issuer") add("low", "A foreign private issuer may file on Form S-1, but Form F-1 is the usual choice.");
-  if (c.fk === "rega1") add("low", "Tier 1 offerings require state (blue-sky) registration and have no ongoing SEC reporting. An exchange listing needs Exchange Act registration separately.");
-  if (c.fk === "rega2" && c.venue && c.venue !== "OTCQB") add("low", "A Tier 2 offering can list on an exchange at qualification if the company also registers under the Exchange Act (Form 8-A) and meets the exchange’s standards.");
-  if (c.fk === "regcf" && c.venue) add("low", "Reg CF securities cannot be resold for one year, and Reg CF does not by itself lead to an exchange listing; a later registration or Reg A offering is needed.");
-  if (c.fk === "regd" && c.ex.includes("Rule 506(b)") && c.ex.includes("Rule 506(c)")) add("high", "Rule 506(b) and Rule 506(c) are both selected. One offering can rely on only one of them.");
-  if (c.fk === "regd" && c.ex.includes("Rule 506(c)")) add("mid", "Rule 506(c) permits general solicitation but every purchaser’s accredited status must be verified with reasonable steps.");
+  if (c.fk === "regd" && !c.ex.length) add("mid", "Tell us who you want to invest (Round 6) so your adviser can set the right private-placement rules.");
+  if (c.fmt.cap && c.max != null && c.max > c.fmt.cap) add("high", `You want to raise up to ${usd(c.max)}, but ${c.fmt.label.split(" — ")[0]} allows at most ${usd(c.fmt.cap)} in 12 months. Lower the amount or choose another type of raise.`);
+  if (c.fmt.rega && jur && !(US_RE.test(jur) || CA_RE.test(jur))) add("high", `Reg A is only open to U.S. or Canadian companies. A company registered in ${jur} would need to raise through a U.S. or Canadian company. Discuss this with your adviser.`);
+  if (c.fmt.cf && jur && !US_RE.test(jur)) add("high", `Reg CF is only open to U.S. companies. A company registered in ${jur} would need to raise through a U.S. company. Discuss this with your adviser.`);
+  if (A.doc_format && A.doc_format.startsWith("Not sure")) add("low", "You haven’t chosen a type of raise yet. Your document will be prepared as a private placement (Reg D) until your adviser confirms.");
+  if (c.fk === "f1" && /delaware|nevada|united states|\bu\.?s\.?a?\b/i.test(jur)) add("mid", "F-1 is for non-U.S. companies. A U.S.-registered company normally uses Form S-1.");
+  if (c.fk === "rega1") add("low", "A Reg A Tier 1 raise must also be registered with each U.S. state where you sell, and does not by itself lead to a stock-exchange listing.");
+  if (c.fk === "rega2" && c.venue && c.venue !== "OTCQB") add("low", "A Reg A+ Tier 2 raise can lead straight to an exchange listing if you also meet the exchange’s requirements. Your adviser will handle the extra filing.");
+  if (c.fk === "regcf" && c.venue) add("low", "Investors in a Reg CF raise cannot sell their shares for one year, and Reg CF does not by itself lead to a stock-exchange listing.");
+  if (c.fk === "regd" && c.ex.includes("Rule 506(b)") && c.ex.includes("Rule 506(c)")) add("high", "Two private-placement rules (506(b) and 506(c)) are both selected. Only one can be used. Your adviser should choose.");
+  if (c.fk === "regd" && c.ex.includes("Rule 506(c)")) add("mid", "Under Rule 506(c) you may advertise the raise, but every investor’s wealth or income must be checked.");
   const ba = c.fk === "regd" ? "Rule 506(d)" : c.fmt.rega ? "Rule 262 (Regulation A)" : c.fk === "regcf" ? "Rule 503 (Regulation Crowdfunding)" : null;
-  if (ba && A.leg_badactor === "Yes") add("high", `A bad-actor event is disclosed. The ${ba} disqualification may make the exemption unavailable; counsel must review before launch.`);
-  if (ba && (A.leg_badactor === "Not yet checked" || isBlank(A.leg_badactor))) add("mid", `Bad-actor questionnaires under ${ba} have not been confirmed for directors, officers, 20% holders and any placement agent or intermediary.`);
-  if (A.co_vie === "Yes") add("high", "VIE structure: requires prominent cover-page and risk-factor disclosure, and heightened SEC and exchange scrutiny.");
-  if (A.fin_pcaob && A.fin_pcaob !== "Yes") add("high", "The auditor is not PCAOB-registered. OTCQB, Nasdaq and NYSE all require a PCAOB-registered auditor.");
-  if (A.fin_going_concern === "Yes") add("mid", "Going-concern paragraph: must be disclosed in Risk Factors and MD&A.");
-  if (A.lst_restrictive === "Yes" && c.venue && c.venue.startsWith("Nasdaq")) add("high", "Nasdaq Restrictive Market rule: IPO must raise at least US$25M in a firm-commitment U.S. offering (or 25% of post-offering MVLS, if lower).");
-  if (c.min != null && c.max != null && c.min > c.max) add("high", "Minimum offering is larger than the maximum offering.");
+  if (ba && A.leg_badactor === "Yes") add("high", `You said someone connected to the company has a fraud conviction, regulatory sanction or court ban. This can prevent the raise; speak to your U.S. lawyer before going ahead.`);
+  if (ba && (A.leg_badactor === "Not sure" || A.leg_badactor === "Not yet checked" || isBlank(A.leg_badactor))) add("mid", `Please confirm that no director, officer, major shareholder or broker has a fraud conviction, regulatory sanction or court ban (Round 9).`);
+  if (A.co_vie === "Yes") add("high", "Contract-based control (a VIE) needs extra disclosure and gets closer review from the SEC and exchanges.");
+  if (A.fin_pcaob === "Not sure") add("mid", "Check whether your auditor is registered with the PCAOB. OTCQB, Nasdaq and NYSE all require a PCAOB-registered auditor.");
+  else if (A.fin_pcaob && A.fin_pcaob !== "Yes") add("high", "Your auditor is not PCAOB-registered. OTCQB, Nasdaq and NYSE all require a PCAOB-registered auditor.");
+  if (A.fin_going_concern === "Not sure") add("low", "Check your latest audit report for a going-concern note.");
+  if (A.co_vie === "Not sure") add("mid", "Confirm with your adviser whether any part of the group is controlled by contract (a VIE).");
+  if (A.fin_going_concern === "Yes") add("mid", "Your auditor raised going-concern doubts. This must be explained to investors in the document.");
+  if (A.lst_restrictive === "Yes" && c.venue && c.venue.startsWith("Nasdaq")) add("high", "Because the business is run mainly from mainland China, Hong Kong or Macau, Nasdaq requires the IPO to raise at least US$25M (or 25% of the company’s value after listing, if lower).");
+  if (c.min != null && c.max != null && c.min > c.max) add("high", "Your minimum raise is larger than your maximum. Please check Round 6.");
   const uop = rowsOf(A, "uop_rows"), uMax = uop.reduce((s, r) => s + (numOf(r.max) || 0), 0), uMin = uop.reduce((s, r) => s + (numOf(r.min) || 0), 0);
-  if (uop.length && c.max && Math.abs(uMax - c.max) > c.max * 0.01) add("mid", `Use of proceeds at maximum totals ${usd(uMax)} but the maximum offering is ${usd(c.max)}.`);
-  if (uop.length && c.min && uMin && Math.abs(uMin - c.min) > c.min * 0.01) add("mid", `Use of proceeds at minimum totals ${usd(uMin)} but the minimum offering is ${usd(c.min)}.`);
+  if (uop.length && c.max && Math.abs(uMax - c.max) > c.max * 0.01) add("mid", `Your use-of-money plan at the maximum adds up to ${usd(uMax)}, but the maximum raise is ${usd(c.max)}.`);
+  if (uop.length && c.min && uMin && Math.abs(uMin - c.min) > c.min * 0.01) add("mid", `Your use-of-money plan at the minimum adds up to ${usd(uMin)}, but the minimum raise is ${usd(c.min)}.`);
   const v = c.venue && VENUES[c.venue];
   if (v) {
     const p = numOf(A.lst_price_est), h = numOf(A.lst_holders_est), fl = numOf(A.lst_float_est);
-    if (p != null && p < v.price) add("high", `Expected listing price ${usd(p, 2)} is below the ${v.label} minimum of ${usd(v.price, 2)}.`);
-    if (h != null && h < v.holders) add("high", `Expected ${int(h)} holders is below the ${v.label} requirement of ${v.holders}.`);
-    if (v.mvuphs && fl != null && fl < v.mvuphs) add("high", `Expected unrestricted public float ${usd(fl)} is below the ${v.label} minimum of ${usd(v.mvuphs)}.`);
+    if (p != null && p < v.price) add("high", `Your expected share price of ${usd(p, 2)} is below the ${v.label} minimum of ${usd(v.price, 2)}.`);
+    if (h != null && h < v.holders) add("high", `You expect ${int(h)} shareholders; ${v.label} needs at least ${v.holders}.`);
+    if (v.mvuphs && fl != null && fl < v.mvuphs) add("high", `You plan to raise ${usd(fl)} from public investors; ${v.label} needs at least ${usd(v.mvuphs)}.`);
     if (c.venue !== "OTCQB") {
       const ind = rowsOf(A, "mgmt_people").filter(r => r.indep === "Yes").length;
-      if (ind < 3) add("mid", `${ind} independent director(s) recorded. ${v.label} requires a majority-independent board and a three-member independent audit committee (IPO phase-in available).`);
+      if (ind < 3) add("mid", `You have ${ind} independent director${ind === 1 ? "" : "s"}. ${v.label} needs most of the board to be independent, including at least 3 for the audit committee (this can be phased in after listing).`);
     }
   }
-  if (isBlank(A.mkt_size) || !/source/i.test(A.mkt_size || "")) add("low", "Market-size figures have no stated source. Third-party sources are needed for the Industry section.");
+  if (isBlank(A.mkt_size) || !/source/i.test(A.mkt_size || "")) add("low", "Add where your market-size figure comes from (e.g. the name of a research report).");
   return f;
 }
 
@@ -1224,7 +1235,7 @@ function gapTable(A) {
   if (v.equity) rows.push(["Stockholders’ equity", usd(v.equity), eq == null ? TBP("equity") : usd(eq), st(eq, v.equity)]);
   rows.push(["PCAOB-registered auditor", "Required", A.fin_pcaob || TBP("auditor status"), A.fin_pcaob === "Yes" ? "Meets" : (A.fin_pcaob ? "Gap" : "To confirm")]);
   if (c.venue !== "OTCQB") rows.push(["Independent directors", "Majority; 3 on audit committee", String(ind), ind >= 3 ? "Meets" : "Gap"]);
-  rows.push(["SEC registration / reporting", "Required", A.lst_route || TBP("route"), "In progress"]);
+  rows.push(["SEC registration / reporting", "Required", A.lst_route || "To be planned with adviser", "In progress"]);
   return rows;
 }
 
@@ -1254,7 +1265,7 @@ function termSheet(A) {
     ["Offering period and closings", g("off_close", "offering period")],
     ["Lock-up", g("off_lockup", "lock-up terms")],
     ["Investor rights", g("off_rights", "investor rights")],
-    ["Intended listing", `${g("lst_venue", "target venue")} via ${g("lst_route", "listing route")}. Listing is subject to regulatory and exchange approval and is not assured.`],
+    ["Intended listing", `${c.venue ? A.lst_venue : TBP("target listing venue")}${isBlank(A.lst_route) ? "" : " via " + A.lst_route}. Listing is subject to regulatory and exchange approval and is not assured.`],
     ["Risk factors", "An investment involves a high degree of risk. See Section 4, “Risk Factors”."],
     ["Governing law", g("dist_law", "governing law")],
     ["Enquiries", g("dist_contact", "investor contact")],
@@ -1287,7 +1298,8 @@ function uopTable(A) {
     ["Total", int(tMin), "100.0%", int(tMax), "100.0%"]];
 }
 function dilution(A) {
-  const c = ctx(A), ntbv = numOf(A.fin_ntbv), costs = numOf(A.off_costs) || 0;
+  const lastEq = rowsOf(A, "fin_years").slice(-1)[0];
+  const c = ctx(A), ntbv = numOf(A.fin_ntbv) ?? (lastEq ? numOf(lastEq.equity) : null), costs = numOf(A.off_costs) || 0;
   if (c.price == null || c.out == null || ntbv == null || c.max == null) return null;
   const col = (gross, shares, cost) => {
     const pre = ntbv / c.out, post = (ntbv + gross - cost) / (c.out + shares), dil = c.price - post;
@@ -1323,7 +1335,7 @@ function fallback(key, A) {
   const blk = (h, id, d) => `## ${h}\n\n${g(id, d)}\n`;
   switch (key) {
     case "intro": return `${c.fk === "regd" ? "Dear Prospective Investor,\n\n" : ""}${para(`${c.fk === "regd" ? "We are pleased to present this Confidential Private Placement Memorandum" : "This " + c.doc + " describes an offering"} on behalf of ${c.co} (“${S}”).`, `${S} operates in ${g("co_industry", "industry")} and is offering ${g("off_security", "securities")} to raise up to ${usd(c.max) || TBP("maximum amount")}.`)}\n\n${para(`The proceeds are intended to fund our growth plan and to prepare ${S} for a public listing on ${g("lst_venue", "target venue")}.`, "A listing is subject to regulatory and exchange approval and is not assured.")}\n\nAn investment in ${S} is speculative and involves a high degree of risk. Please read this ${c.doc} in full, particularly the Risk Factors, and consult your own legal, tax and financial advisers before investing.` + (c.fk === "regd" ? `\n\nYours faithfully,\n\n${c.ceo ? c.ceo.name : TBP("signatory")}\n${c.ceo ? c.ceo.title || "" : ""}` : "");
-    case "exec": return [`## Overview\n\n${c.co} was incorporated in ${g("co_jurisdiction", "jurisdiction")} on ${g("co_incorp_date", "date")} and operates in ${g("co_ops_countries", "countries")}.`, blk("Our Business", "biz_products", "products"), blk("Market Opportunity", "mkt_size", "market size"), blk("Competitive Strengths", "mkt_advantages", "advantages"), `## The Offering\n\n${S} is offering up to ${usd(c.max) || TBP("maximum")} of ${g("off_security", "securities")} at ${usd(c.price, 2) || TBP("price")} per security under ${c.basis}.`, `## Path to Public Listing\n\n${S} intends to seek a listing on ${g("lst_venue", "venue")} via ${g("lst_route", "route")}. There is no assurance that a listing will be achieved.`].join("\n");
+    case "exec": return [`## Overview\n\n${c.co} was incorporated in ${g("co_jurisdiction", "jurisdiction")} on ${g("co_incorp_date", "date")} and operates in ${g("co_ops_countries", "countries")}.`, blk("Our Business", "biz_products", "products"), blk("Market Opportunity", "mkt_size", "market size"), blk("Competitive Strengths", "mkt_advantages", "advantages"), `## The Offering\n\n${S} is offering up to ${usd(c.max) || TBP("maximum")} of ${g("off_security", "securities")} at ${usd(c.price, 2) || TBP("price")} per security under ${c.basis}.`, `## Path to Public Listing\n\n${S} intends to seek a listing on ${c.venue ? A.lst_venue : TBP("target venue")}${isBlank(A.lst_route) ? "" : " via " + A.lst_route}. There is no assurance that a listing will be achieved.`].join("\n");
     case "risk_a": return `An investment in ${S} involves a high degree of risk. You should carefully consider the risks below before investing. You could lose all of your investment.\n\n## Risks Related to Our Business\n\n**We have a limited operating history.** ${S} was incorporated on ${g("co_incorp_date", "date")} and our business model may not succeed.\n\n**We depend on a small number of customers.** ${g("biz_concentration", "customer concentration")}. The loss of a major customer could materially harm our results.\n\n**We depend on key personnel.** ${g("leg_keyperson", "key-person dependencies")}.\n\n**We may be unable to protect our intellectual property.** ${g("biz_tech_ip", "IP position")}.\n\n**Cybersecurity and data-privacy incidents could harm us.** ${g("leg_data", "data position")}.\n\n## Risks Related to Our Industry\n\n**Competition could reduce our market share and margins.** Our competitors include ${g("mkt_competitors", "competitors")}.\n\n**Changes in regulation could increase our costs.** ${g("mkt_regulation", "regulation")}.\n\n## Risks Related to Our Financial Condition\n\n**We may need additional capital.** Our average monthly burn is ${usd(numOf(A.fin_burn)) || TBP("burn")}; additional financing may not be available on acceptable terms.\n\n**Currency fluctuations may affect our results.** ${g("leg_fx", "currency exposure")}.` + (A.fin_going_concern === "Yes" ? `\n\n**Our auditor has expressed substantial doubt about our ability to continue as a going concern.** Investors could lose their entire investment.` : "");
     case "risk_b": return `## Risks Related to This Offering and Our Securities\n\n**There is no public market for the securities.** The securities are restricted and cannot be resold unless registered or exempt.\n\n**The offering price was set arbitrarily.** It does not necessarily reflect asset value, earnings or any other valuation measure.\n\n**Investors will experience immediate dilution.** See Section 13, “Dilution”.\n\n**We do not expect to pay dividends.**\n\n## Risks Related to the Proposed Public Listing\n\n**We may not achieve a listing.** A listing on ${g("lst_venue", "venue")} requires SEC effectiveness and exchange approval, and the exchange has discretion to deny a listing.\n\n**Operating as a public company will increase our costs.** We will be subject to SEC reporting, Sarbanes-Oxley and exchange governance requirements.\n\n**The market price of our shares may be volatile.**\n\n## Risks Related to Our Jurisdiction, Regulation and Corporate Structure\n\n**Investors may have difficulty enforcing judgments.** ${S} is incorporated in ${g("co_jurisdiction", "jurisdiction")} and its operations are located in ${g("co_ops_countries", "countries")}.` + (A.co_vie === "Yes" ? `\n\n**Our VIE structure may be challenged.** Investors hold shares of the holding company, not equity in the operating entities.` : "") + `\n\n## Tax Risks\n\n**We may be treated as a passive foreign investment company (PFIC).** [TO BE CONFIRMED BY TAX ADVISER]`;
     case "overview": return [`## History and Development\n\n${c.co} was incorporated in ${g("co_jurisdiction", "jurisdiction")} on ${g("co_incorp_date", "date")}. ${g("biz_milestones", "milestones")}`, blk("Corporate Structure", "co_structure_desc", "group structure"), blk("Principal Offices", "co_hq", "offices"), blk("Employees", "mgmt_employees", "headcount")].join("\n");
@@ -1335,7 +1347,7 @@ function fallback(key, A) {
     case "cap": return [blk("Share Capital", "cap_authorized", "authorized capital"), blk("Outstanding Convertible Securities, Warrants and Options", "cap_convertibles", "convertibles"), blk("Basis of Valuation", "cap_valuation_basis", "valuation basis")].join("\n");
     case "mdna": return [blk("Results of Operations", "fin_mdna_notes", "drivers of results"), `## Liquidity and Capital Resources\n\nAt the latest balance sheet date ${S} held cash of ${usd(numOf(A.fin_cash)) || TBP("cash")} and total debt of ${usd(numOf(A.fin_debt)) || TBP("debt")}. Average monthly burn was ${usd(numOf(A.fin_burn)) || TBP("burn")}.`, `## Auditor\n\n${g("fin_auditor", "auditor")} (PCAOB-registered: ${g("fin_pcaob", "status")}).`].join("\n");
     case "proj": return `The projections below are forward-looking statements prepared by management. They are unaudited, are based on assumptions that may not prove correct, and actual results may differ materially.\n\n` + blk("Key Assumptions", "fin_assumptions", "assumptions");
-    case "listing": return [`## Listing Objective\n\n${S} intends to seek a listing on ${g("lst_venue", "venue")} via ${g("lst_route", "route")}.`, `## Advisory Team\n\n- U.S. securities counsel: ${g("lst_counsel", "counsel")}\n- Auditor: ${g("fin_auditor", "auditor")}\n- Underwriter / investment bank: ${g("lst_uw", "underwriter")}\n- Transfer agent: ${g("lst_ta", "transfer agent")}\n- Market maker: ${g("lst_mm", "market maker")}`, `## Liquidity for Investors in This Offering\n\nSecurities sold in this Offering are restricted securities. Resale requires registration or an exemption such as Rule 144, which generally requires a holding period of six months (for a reporting company) or one year. Lock-up: ${g("off_lockup", "lock-up")}.`, `## No Assurance of Listing\n\nA listing is subject to SEC and exchange approval and is not assured.`].join("\n");
+    case "listing": return [`## Listing Objective\n\n${S} intends to seek a listing on ${c.venue ? A.lst_venue : TBP("target venue")}${isBlank(A.lst_route) ? "" : " via " + A.lst_route}.`, `## Advisory Team\n\n- U.S. securities counsel: ${g("lst_counsel", "counsel")}\n- Auditor: ${g("fin_auditor", "auditor")}\n- Underwriter / investment bank: ${g("lst_uw", "underwriter")}\n- Transfer agent: ${g("lst_ta", "transfer agent")}\n- Market maker: ${g("lst_mm", "market maker")}`, `## Liquidity for Investors in This Offering\n\nSecurities sold in this Offering are restricted securities. Resale requires registration or an exemption such as Rule 144, which generally requires a holding period of six months (for a reporting company) or one year. Lock-up: ${g("off_lockup", "lock-up")}.`, `## No Assurance of Listing\n\nA listing is subject to SEC and exchange approval and is not assured.`].join("\n");
     case "securities": return [blk("Authorized Share Capital", "cap_authorized", "authorized capital"), blk("The Securities Offered", "off_security_terms", "security terms"), blk("Investor Rights", "off_rights", "investor rights"), blk("Transfer Agent", "lst_ta", "transfer agent")].join("\n");
     case "rpt": return g("leg_rpt", "related-party transactions");
     case "legal": return [blk("Litigation", "leg_litigation", "litigation"), blk("Licences and Approvals", "leg_licences", "licences"), blk("Sanctions and Export Controls", "leg_sanctions", "sanctions position"), `## Bad-Actor Disqualification\n\nRule 506(d) status: ${g("leg_badactor", "bad-actor confirmation")}.`].join("\n");
@@ -1488,7 +1500,7 @@ function buildDocx(A, drafts) {
   const addTable = (cap, rows, widths) => { if (!rows) return; kids.push(caption(cap)); kids.push(table(rows, widths)); kids.push(spacer()); };
 
   /* Cover */
-  const date = c.g("dist_date", "date");
+  const date = isBlank(A.dist_date) ? new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : A.dist_date;
   if (A.__sample) kids.push(new Paragraph({ spacing: { after: 0 }, shading: { fill: "F6E7A8", type: ShadingType.CLEAR, color: "auto" }, children: [new TextRun({ text: "SAMPLE DOCUMENT — FICTIONAL COMPANY. ALL NAMES, FIGURES AND ADVISERS ARE ILLUSTRATIVE. NOT AN OFFER OF SECURITIES.", bold: true, size: 16 })] }));
   kids.push(new Paragraph({ spacing: { before: A.__sample ? 1500 : 1800, after: 120 }, children: [new TextRun({ text: c.fmt.cover, bold: true, size: 22, color: "3A4A42", characterSpacing: 40 })] }));
   kids.push(new Paragraph({ spacing: { after: 240 }, children: runs(c.co, { size: 44, bold: true, color: INK }) }));
@@ -1589,8 +1601,9 @@ function buildDocx(A, drafts) {
   kids.push(new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun("Readiness flags")] }));
   const fl = flagsFor(A); (fl.length ? fl : [{ lvl: "low", t: "No automatic flags raised." }]).forEach(f => kids.push(new Paragraph({ numbering: { reference: "bul", level: 0 }, spacing: { after: 60 }, children: runs(`${f.lvl === "high" ? "High" : f.lvl === "mid" ? "Medium" : "Low"}: ${f.t}`) })));
   kids.push(new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun("Unanswered questionnaire items")] }));
-  const miss = []; ROUNDS.forEach(r => r.fields.forEach(f => { const v = f.type === "rows" ? rowsOf(A, f.id) : A[f.id]; if (isBlank(v)) miss.push(`${r.short}: ${f.label}`); }));
+  const miss = [], adv = []; ROUNDS.forEach(r => r.fields.forEach(f => { const v = f.type === "rows" ? rowsOf(A, f.id) : A[f.id]; if (!isBlank(v)) return; if (f.adv) adv.push(f.label); else if (isVisible(f, A)) miss.push(`${r.title}: ${f.label}`); }));
   (miss.length ? miss : ["All questionnaire items answered."]).forEach(m => kids.push(new Paragraph({ numbering: { reference: "bul", level: 0 }, spacing: { after: 40 }, children: runs(m, { size: 18 }) })));
+  if (adv.length) { kids.push(new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun("For the adviser to complete")] })); kids.push(P(adv.join("; ") + ".", { run: { size: 18 } })); }
   kids.push(new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun("Required reviews")] }));
   [`Document type: ${c.fmt.label}. Confirm the form items against ${c.fmt.rules}.`, "U.S. securities counsel: legends, exemption analysis, Description of Securities, transfer restrictions, state notices.", "Auditor: all historical figures, dilution and capitalization tables.", "Tax adviser: Taxation section and PFIC analysis.", "Search the document for highlighted [TO BE PROVIDED] and [TO BE CONFIRMED] placeholders."].forEach(m => kids.push(new Paragraph({ numbering: { reference: "bul", level: 0 }, spacing: { after: 60 }, children: runs(m) })));
 
@@ -1752,7 +1765,7 @@ async function extractFile(file, imgCaps) {
 
 /* ---------- Extraction prompt ---------- */
 function fieldCatalogue() {
-  return ROUNDS.flatMap(r => r.fields.filter(f => !f.noExtract).map(f => {
+  return ROUNDS.flatMap(r => r.fields.filter(f => !f.noExtract && !f.adv).map(f => {
     let spec = f.type;
     if (f.type === "select" || f.type === "multi") spec += " one of: " + f.options.map(o => JSON.stringify(o)).join(" | ");
     if (f.type === "rows") spec += " of objects with keys: " + f.cols.map(([k, l, kind, o]) => `${k} (${l}${kind === "n" ? ", number" : ""}${kind === "sel" ? ", one of " + o.filter(Boolean).join("/") : ""})`).join(", ");
@@ -1812,7 +1825,7 @@ function chunkCorpus(maxBytes) {
 /* ---------- Normalise and merge Claude's answers ---------- */
 const FIELD = {}; if (typeof ROUNDS !== "undefined") ROUNDS.forEach(r => r.fields.forEach(f => FIELD[f.id] = { ...f, round: r }));
 function normalise(id, v) {
-  const f = FIELD[id]; if (!f || f.noExtract || v == null) return null;
+  const f = FIELD[id]; if (!f || f.noExtract || f.adv || v == null) return null;
   if (f.type === "select") { const o = f.options.find(x => x.toLowerCase() === String(v).toLowerCase().trim()) || f.options.find(x => String(v).toLowerCase().startsWith(x.toLowerCase().split(" ")[0]) && x.length > 2); return o || null; }
   if (f.type === "multi") { const arr = (Array.isArray(v) ? v : [v]).map(x => f.options.find(o => o.toLowerCase() === String(x).toLowerCase().trim())).filter(Boolean); return arr.length ? [...new Set(arr)] : null; }
   if (f.type === "rows") {
@@ -1849,14 +1862,14 @@ let sampleCaps = null, extracting = null, proposals = null, docMsg = null;
 function fmtSize(b) { return b > 1e6 ? (b / 1e6).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1e3)) + " KB"; }
 function renderDocs() {
   const m = $("#main"); m.replaceChildren();
-  m.append(el("div", { class: "eyebrow", text: "Start here · optional" }), el("h2", { class: "step", text: "Welcome. Start with your documents" }),
-    el("p", { class: "blurb", text: "ApexCapital.Asia’s Fund Raising Online Application prepares your offering document. Attach your pitch deck, financial statements, audit report and team bios, and paste your website text. Claude reads them and proposes answers for all ten rounds. You approve each answer before it goes in." }));
+  m.append(el("div", { class: "eyebrow", text: "Start here" }), el("h2", { class: "step", text: "Welcome. Let’s prepare your offering document" }),
+    el("p", { class: "blurb", text: "Upload the documents you already have and we’ll fill in as many answers as possible for you. You check each answer before it’s used. No documents? Skip this step and answer the questions directly." }));
 
   const empty = Object.keys(A()).every(k => isBlank(A()[k])) && !docs.length;
   m.append(el("div", { class: "intro sample-cta" },
     el("div", {}, el("strong", { text: "See the end result first" }), el("p", { text: `Browse a finished ${FORMATS[fmtKey(currentSample().answers.doc_format)].doc.toLowerCase()} for a sample company and download it as a Word file, so you know what this application will produce for you.` })),
     el("div", { class: "actions" }, el("button", { type: "button", class: "btn primary", onclick: () => go(SAMPLE_STEP) }, "View the sample result"),
-      empty ? el("button", { type: "button", class: "btn ghost", onclick: () => go(1) }, "Skip to Round 1 →") : null)));
+      empty ? el("button", { type: "button", class: "btn ghost", onclick: () => go(1) }, "Skip to the questions →") : null)));
 
   /* drop zone */
   const accept = ".pdf,.pptx,.docx,.xlsx,.xls,.csv,.txt,.md" + (sampleCaps && sampleCaps.images ? ",.jpg,.jpeg,.png,.webp" : "");
@@ -1864,39 +1877,35 @@ function renderDocs() {
   const zone = el("label", { class: "drop", for: "docFiles",
     ondragover: e => { e.preventDefault(); zone.classList.add("over"); }, ondragleave: () => zone.classList.remove("over"),
     ondrop: e => { e.preventDefault(); zone.classList.remove("over"); addFiles(e.dataTransfer.files); } },
-    el("strong", { text: "Drop files here or choose files" }),
-    el("span", { text: "PDF, PowerPoint (.pptx), Word (.docx), Excel (.xlsx, .csv), text" + (sampleCaps && sampleCaps.images ? ", images" : "") + ". Scanned PDFs are read from page images where available." }));
+    el("strong", { text: "Drag your files here, or click to choose" }),
+    el("span", { text: "Pitch deck, financial statements, audit report, business plan or team profiles. PDF, PowerPoint, Word or Excel." }));
   const list = el("ul", { class: "files" });
   docs.forEach(d => {
     const status = d.status === "reading" ? el("span", { class: "chip run", text: "Reading" })
       : d.status === "error" ? el("span", { class: "chip err", text: "Can’t read" })
       : el("span", { class: "chip ok", text: "Ready" });
-    const kind = el("select", { "aria-label": `Document type for ${d.name}`, onchange: e => { d.kind = e.target.value; saveDocs(); } }, ...DOC_KINDS.map(k => el("option", { value: k, text: k }))); kind.value = d.kind;
-    const detail = d.status === "error" ? d.err : d.status === "reading" ? "Extracting text…" :
-      [d.pages ? `${d.pages} ${/\.pptx$/i.test(d.name) ? (d.pages > 1 ? "slides" : "slide") : /\.(xlsx|xls|csv)$/i.test(d.name) ? "sheet" : "page"}${d.pages > 1 && !/\.pptx$/i.test(d.name) ? "s" : ""}` : null, d.text ? `${d.text.length.toLocaleString()} characters` : null, d.scanned ? (d.images && d.images.length ? `${d.images.length} page images for reading` : "little text found (scanned?)") : null].filter(Boolean).join(" · ");
-    list.append(el("li", {}, el("div", { class: "fn" }, el("strong", { text: d.name }), el("span", { text: `${fmtSize(d.size)}${detail ? " · " + detail : ""}` })), kind, status,
+    const detail = d.status === "error" ? d.err : d.status === "reading" ? "Reading the file…" :
+      [d.pages ? `${d.pages} ${/\.pptx$/i.test(d.name) ? (d.pages > 1 ? "slides" : "slide") : /\.(xlsx|xls|csv)$/i.test(d.name) ? "sheet" : "page"}${d.pages > 1 && !/\.pptx$/i.test(d.name) ? "s" : ""}` : null, d.scanned && !(d.images && d.images.length) ? "little text found; if this is a scan, the Claude version may read it better" : null].filter(Boolean).join(" · ");
+    list.append(el("li", {}, el("div", { class: "fn" }, el("strong", { text: d.name }), el("span", { text: detail || fmtSize(d.size) })), status,
       el("button", { type: "button", class: "x", "aria-label": `Remove ${d.name}`, title: "Remove", onclick: () => { docs = docs.filter(x => x !== d); saveDocs(); renderDocs(); } }, "×")));
   });
 
   const web = el("div", { class: "form", style: "margin-top:22px" },
-    el("div", { class: "fld" }, el("label", { class: "l", for: "f_co_website", text: "Company website" }), el("div", { class: "h", text: "This page can’t open other websites, so paste the text of the pages below." }),
-      el("input", { type: "text", id: "f_co_website", value: A().co_website || "", placeholder: "www.example.com", oninput: e => { A().co_website = e.target.value; save(); renderRail(); } })),
-    el("div", { class: "fld" }),
-    el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_src_website_text", text: "Website text (About, Products, Team, News pages)" }),
+    el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_src_website_text", text: "Text from your website (optional)" }), el("div", { class: "h", text: "Open your About, Products and Team pages, copy the text and paste it here." }),
       el("textarea", { id: "f_src_website_text", rows: 5, placeholder: "Select all on each page, copy, and paste here.", oninput: e => { A().src_website_text = e.target.value; save(); } }, A().src_website_text || "")),
-    el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_src_team_text", text: "Team and board (names, titles, bios, LinkedIn summaries)" }),
+    el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_src_team_text", text: "Your team and board (optional)" }), el("div", { class: "h", text: "Names, roles and short backgrounds. LinkedIn summaries are fine." }),
       el("textarea", { id: "f_src_team_text", rows: 5, placeholder: "e.g. Daniel Koh — Chairman & CEO, 52. Founded the company in 2019; previously…", oninput: e => { A().src_team_text = e.target.value; save(); } }, A().src_team_text || "")));
 
   const ready = docs.some(d => d.status === "ready" && (d.text || (d.images && d.images.length))) || !isBlank(A().src_website_text) || !isBlank(A().src_team_text);
   const run = el("div", { class: "actions", style: "margin-top:20px" });
-  if (extracting) run.append(el("button", { type: "button", class: "btn", onclick: () => extracting.ctl.abort() }, "Stop reading"), el("span", { class: "tip", style: "margin:0", id: "exProg", text: extracting.label || "Starting…" }));
-  else run.append(el("button", { type: "button", class: "btn primary", disabled: !ready || !sampleFn || docs.some(d => d.status === "reading"), onclick: runExtraction }, "Fill the questionnaire from these sources"),
+  if (extracting) run.append(el("button", { type: "button", class: "btn", onclick: () => extracting.ctl.abort() }, "Stop"), el("span", { class: "tip", style: "margin:0", id: "exProg", text: extracting.label || "Starting…" }));
+  else run.append(el("button", { type: "button", class: "btn primary", disabled: !ready || !sampleFn || docs.some(d => d.status === "reading"), onclick: runExtraction }, "Fill in my answers from these files"),
     ...(!sampleFn ? [el("span", { class: "tip", style: "margin:0", text: STANDALONE ? "Reading documents with Claude runs in the Claude-hosted version (Open with Claude, above)." : "Reading documents needs Claude, which isn’t available in this view." })] : []));
 
   m.append(el("section", { class: "panel" }, input, zone, docs.length ? list : null, web, run, docMsg ? el("div", { class: "msg" + (docMsg.err ? " err" : ""), text: docMsg.t }) : null));
   if (proposals) m.append(renderProposals());
-  m.append(el("p", { class: "tip" }, "Files are read inside your browser. Their text is sent to Claude only when you press Fill, and is kept on this device so you can re-run it."));
-  m.append(el("div", { class: "pager" }, el("span"), el("button", { type: "button", class: "btn primary", onclick: () => go(1) }, "Next: Company →")));
+  m.append(el("p", { class: "tip" }, "Your files are read on this device and only sent to Claude when you press “Fill in my answers”."));
+  m.append(el("div", { class: "pager" }, el("span"), el("button", { type: "button", class: "btn primary", onclick: () => go(1) }, "Continue to the questions →")));
 }
 
 async function addFiles(fileList) {
@@ -1969,11 +1978,11 @@ function preview(id, v) {
 function renderProposals() {
   const box = el("section", { class: "panel proposals" });
   const on = proposals.filter(p => p.on).length;
-  box.append(el("div", { class: "ph" }, el("h3", { text: `Proposed answers (${proposals.length})` }),
+  box.append(el("div", { class: "ph" }, el("h3", { text: `Answers found in your files (${proposals.length})` }),
     el("div", { class: "actions" },
       el("button", { type: "button", class: "btn sm ghost", onclick: () => { proposals.forEach(p => p.on = true); renderDocs(); } }, "Select all"),
       el("button", { type: "button", class: "btn sm ghost", onclick: () => { proposals.forEach(p => p.on = false); renderDocs(); } }, "Select none"))));
-  box.append(el("p", { class: "tip", style: "margin:0 0 12px", text: "Answers that would replace something you already entered start unticked. Check figures against the source before applying." }));
+  box.append(el("p", { class: "tip", style: "margin:0 0 12px", text: "Tick the answers you want to use. Anything that would replace an answer you already typed starts unticked. Please check the figures." }));
   ROUNDS.forEach((r, ri) => {
     const ps = proposals.filter(p => FIELD[p.id].round === r); if (!ps.length) return;
     const ul = el("ul", { class: "props" });
@@ -2170,8 +2179,9 @@ const A = () => state.answers;
 const REVIEW = ROUNDS.length + 1; // step 0 = documents, 1..10 = rounds
 
 function roundProgress(r) {
-  let n = 0; r.fields.forEach(f => { const v = f.type === "rows" ? rowsOf(A(), f.id) : A()[f.id]; if (!isBlank(v)) n++; });
-  return [n, r.fields.length];
+  const vis = r.fields.filter(f => isVisible(f, A()));
+  let n = 0; vis.forEach(f => { const v = f.type === "rows" ? rowsOf(A(), f.id) : A()[f.id]; if (!isBlank(v)) n++; });
+  return [n, vis.length];
 }
 
 /* ---------- Rail ---------- */
@@ -2188,14 +2198,14 @@ function renderRail() {
       el("span", { class: "num", text: String(i + 1) }), el("span", { text: r.short }), el("span", { class: "cnt", text: `${n}/${t}` }))));
   });
   ol.append(el("li", {}, el("button", { type: "button", "aria-current": state.step === REVIEW ? "step" : null, onclick: () => go(REVIEW) },
-    el("span", { class: "num", text: "✓" }), el("span", { text: "Review & generate" }), el("span", { class: "cnt", text: "" }))));
+    el("span", { class: "num", text: "✓" }), el("span", { text: "Review & create" }), el("span", { class: "cnt", text: "" }))));
 }
 function go(i) { state.step = i; save(); render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
 
 /* ---------- Fields ---------- */
 function control(f) {
   const v = A()[f.id];
-  const set = val => { A()[f.id] = val; if (f.id === "doc_format") state.drafts = {}; if (f.id === "co_name") delete A().__sample; save(); renderRail(); };
+  const set = val => { A()[f.id] = val; if (["doc_format", "co_structure", "off_security", "leg_badactor"].includes(f.id)) setTimeout(() => { if (state.step >= 1 && state.step < REVIEW) renderRound(state.step); }, 0); if (f.id === "doc_format") state.drafts = {}; if (f.id === "co_name") delete A().__sample; save(); renderRail(); };
   if (f.type === "textarea") return el("textarea", { id: "f_" + f.id, rows: f.rows || 4, placeholder: f.ph || "", oninput: e => set(e.target.value) }, v || "");
   if (f.type === "select") {
     const s = el("select", { id: "f_" + f.id, onchange: e => set(e.target.value) }, el("option", { value: "" , text: "Select…" }), ...f.options.map(o => el("option", { value: o, text: o })));
@@ -2238,16 +2248,16 @@ function renderRound(step) {
   const i = step - 1, r = ROUNDS[i], m = $("#main"); m.replaceChildren();
   m.append(el("div", { class: "eyebrow", text: `Round ${i + 1} of ${ROUNDS.length}` }), el("h2", { class: "step", text: r.title }), el("p", { class: "blurb", text: r.blurb }));
   const form = el("div", { class: "form" });
-  r.fields.forEach(f => {
+  r.fields.filter(f => isVisible(f, A())).forEach(f => {
     const c = control(f);
     const lab = (f.type === "multi" || f.type === "rows") ? el("span", { class: "l", style: "font-weight:500;font-size:14px", text: f.label }) : el("label", { class: "l", for: "f_" + f.id, text: f.label });
     form.append(el("div", { class: "fld" + (f.wide || f.type === "rows" || f.type === "multi" ? " wide" : "") }, lab, f.help ? el("div", { class: "h", text: f.help }) : null, c));
   });
   m.append(form);
-  const tip = el("p", { class: "tip" }, "Blank answers appear in the memorandum as ", el("mark", { text: "[TO BE PROVIDED: …]" }), " so nothing is invented.");
+  const tip = el("p", { class: "tip" }, "Don’t know an answer? Leave it blank. It will be marked in your document for you or your adviser to complete later.");
   m.append(tip, el("div", { class: "pager" },
     el("button", { type: "button", class: "btn", onclick: () => go(step - 1) }, i === 0 ? "← Documents" : "← Back"),
-    el("button", { type: "button", class: "btn primary", onclick: () => go(step + 1) }, i === ROUNDS.length - 1 ? "Review & generate →" : `Next: ${ROUNDS[i + 1].short} →`)));
+    el("button", { type: "button", class: "btn primary", onclick: () => go(step + 1) }, i === ROUNDS.length - 1 ? "Review & create →" : `Next: ${ROUNDS[i + 1].short} →`)));
 }
 
 /* ---------- Review & generate ---------- */
@@ -2268,46 +2278,42 @@ async function saveFile({ filename, data }) {
 const jobState = {}; // key -> {st, words, err}
 function renderReview() {
   const m = $("#main"); m.replaceChildren();
-  m.append(el("div", { class: "eyebrow", text: "Final step" }), el("h2", { class: "step", text: "Review & generate" }),
-    el("p", { class: "blurb", text: "Check completeness and readiness flags, then draft the document. You can come back and change answers at any time; redraft only the sections affected." }));
+  m.append(el("div", { class: "eyebrow", text: "Last step" }), el("h2", { class: "step", text: "Review and create your document" }),
+    el("p", { class: "blurb", text: "See what’s still missing, then create your document. You can go back and change any answer at any time." }));
   const comp = el("ul", { class: "comp" });
-  ROUNDS.forEach((r, i) => { const [n, t] = roundProgress(r); comp.append(el("li", {}, el("button", { type: "button", class: "btn ghost sm", style: "text-align:left;padding:0", onclick: () => go(i + 1) }, `${i + 1}. ${r.short}`), el("div", { class: "bar" }, el("i", { style: `width:${Math.round(n / t * 100)}%` })), el("span", { class: "cnt", text: `${n}/${t}` }))); });
+  ROUNDS.forEach((r, i) => { const [n, t] = roundProgress(r); comp.append(el("li", {}, el("button", { type: "button", class: "btn ghost sm", style: "text-align:left;padding:0", onclick: () => go(i + 1) }, `${i + 1}. ${r.short}`), el("div", { class: "bar" }, el("i", { style: `width:${t ? Math.round(n / t * 100) : 100}%` })), el("span", { class: "cnt", text: `${n}/${t}` }))); });
   const fl = flagsFor(A());
-  const flags = el("ul", { class: "flags" }, ...(fl.length ? fl : [{ lvl: "low", t: "No readiness issues detected from the answers so far." }]).map(f => el("li", { class: f.lvl }, el("b", { text: f.lvl === "high" ? "High" : f.lvl === "mid" ? "Check" : "Note" }), f.t)));
-  m.append(el("div", { class: "grid2" }, el("section", { class: "panel" }, el("h3", { text: "Completeness" }), comp), el("section", { class: "panel" }, el("h3", { text: "Readiness flags" }), flags)));
+  const flags = el("ul", { class: "flags" }, ...(fl.length ? fl : [{ lvl: "low", t: "Nothing to flag from your answers so far." }]).map(f => el("li", { class: f.lvl }, el("b", { text: f.lvl === "high" ? "Important" : f.lvl === "mid" ? "Check" : "Note" }), f.t)));
+  m.append(el("div", { class: "grid2" }, el("section", { class: "panel" }, el("h3", { text: "Your answers" }), comp), el("section", { class: "panel" }, el("h3", { text: "Things to check" }), flags)));
 
   const gen = el("section", { class: "panel gen" });
   const cur = FORMATS[fmtKey(A().doc_format)];
-  gen.append(el("h3", { text: "Generate the document" }));
-  const fsel = el("select", { id: "rv_format", onchange: e => { A().doc_format = e.target.value; state.drafts = {}; save(); renderRail(); renderReview(); msg("Document type changed. Drafts were cleared so every section is written for the new format."); } }, ...Object.values(FORMATS).map(f => el("option", { value: f.label, text: f.label })));
-  fsel.value = cur.label;
-  gen.append(el("div", { class: "fld", style: "margin-bottom:14px;max-width:560px" }, el("label", { class: "l", for: "rv_format", text: "Which document should this produce?" }), fsel,
-    el("div", { class: "h", text: "Sets the cover, legends, section titles, exhibits and the SEC form Claude drafts to. Changing it clears existing drafts." })));
+  gen.append(el("h3", { text: "Create your document" }));
+  const fmtOpts = ROUNDS.flatMap(r => r.fields).find(f => f.id === "doc_format").options;
+  const fsel = el("select", { id: "rv_format", onchange: e => { A().doc_format = e.target.value; state.drafts = {}; save(); renderRail(); renderReview(); } }, ...fmtOpts.map(o => el("option", { value: o, text: o })));
+  fsel.value = A().doc_format && fmtOpts.includes(A().doc_format) ? A().doc_format : fmtOpts[0];
+  gen.append(el("div", { class: "fld", style: "margin-bottom:14px;max-width:560px" }, el("label", { class: "l", for: "rv_format", text: "Type of raise" }), fsel,
+    el("div", { class: "h", text: `Your document will be a ${cur.file}.` })));
   const aiOk = sampleFn !== null, M = effMode();
   const mode = (val, title, sub, dis) => el("label", {}, el("input", { type: "radio", name: "mode", value: val, checked: M === val, disabled: dis, onchange: () => { state.mode = val; save(); renderReview(); } }), el("span", {}, title, el("small", { text: sub })));
   gen.append(el("div", { class: "modes" },
-    mode("ai", "Claude drafts each section", aiOk ? `Full disclosure prose for the ${cur.doc.toLowerCase()}, 21 sections, about 10–15 minutes. Uses your Claude account.` : STANDALONE ? "Runs in the Claude-hosted version of this application." : "Not available in this view.", !aiOk),
-    mode("quick", "Quick draft from answers", "Instant. Your answers placed under the right headings with standard legends and tables.", false)));
+    mode("ai", "Written by Claude (recommended)", aiOk ? "Claude writes every section in full, professional language. Takes about 10–15 minutes." : STANDALONE ? "Available in the Claude version of this application (see the banner above)." : "Not available here.", !aiOk),
+    mode("quick", "Quick version", "Ready straight away. Uses your answers as you wrote them.", false)));
   const est = estimatePages(A(), M === "ai" ? state.drafts : {});
   const drafted = SECTIONS.filter(s => state.drafts[s.key]).length;
   const actions = el("div", { class: "actions" });
   if (M === "ai") {
     actions.append(running
-      ? el("button", { type: "button", class: "btn", onclick: stopAll }, "Stop drafting")
-      : el("button", { type: "button", class: "btn primary", onclick: () => draftAll(false) }, drafted ? `Draft remaining sections (${SECTIONS.length - drafted})` : "Draft all sections with Claude"));
-    if (drafted && !running) actions.append(el("button", { type: "button", class: "btn", onclick: () => draftAll(true) }, "Redraft everything"));
+      ? el("button", { type: "button", class: "btn", onclick: stopAll }, "Stop writing")
+      : el("button", { type: "button", class: "btn primary", onclick: () => draftAll(false) }, drafted ? `Write the remaining sections (${SECTIONS.length - drafted})` : "Start writing"));
+    if (drafted && !running) actions.append(el("button", { type: "button", class: "btn ghost", onclick: () => draftAll(true) }, "Rewrite everything"));
   }
-  actions.append(el("button", { type: "button", class: M === "quick" || drafted === SECTIONS.length ? "btn primary" : "btn", disabled: !!running, onclick: downloadDocx }, "Download Word document (.docx)"));
-  actions.append(el("button", { type: "button", class: "btn ghost", onclick: copyPrompt }, "Copy prompt for Claude chat"));
+  actions.append(el("button", { type: "button", class: M === "quick" || drafted === SECTIONS.length ? "btn primary" : "btn", disabled: !!running, onclick: downloadDocx }, "Download my document (Word)"));
   gen.append(actions);
-  gen.append(el("div", { class: "meter" },
-    el("span", {}, "Estimated length ", el("strong", { class: est.pages > 80 ? "over" : "", text: `≈ ${est.pages} pages` }), " of 80 max"),
-    el("span", {}, "Narrative ", el("strong", { text: est.words.toLocaleString() }), " words"),
-    M === "ai" ? el("span", {}, "Drafted ", el("strong", { text: `${drafted}/${SECTIONS.length}` }), " sections") : null));
+  gen.append(el("div", { class: "meter" }, el("span", {}, "About ", el("strong", { text: `${est.pages} pages` })),
+    M === "ai" ? el("span", {}, el("strong", { text: `${drafted} of ${SECTIONS.length}` }), " sections written") : null));
   gen.append(el("div", { id: "genMsg" }));
   if (M === "ai") gen.append(jobsList());
-  gen.append(el("h3", { text: "Document format", style: "margin-top:22px" }), el("ul", { class: "spec" },
-    ...["US Letter, 1-inch margins; Arial 10 pt body, 1.15 line spacing, 6 pt after paragraphs", "Numbered headings: 14 pt caps sections on new pages, 12 pt sub-sections, 10.5 pt bold-italic minor headings", `Cover, ${cur.doc.toLowerCase()} legends, table of contents, 23 sections, exhibits list and a removable Drafting Notes page`, "Confidential header, “Page X of Y” footer, 9 pt tables with shaded headers", "Word asks to update fields on opening; choose Yes to fill the table of contents"].map(t => el("li", { text: t }))));
   m.append(gen);
   m.append(el("div", { class: "pager" }, el("button", { type: "button", class: "btn", onclick: () => go(REVIEW - 1) }, "← Back"), el("span")));
 }
@@ -2316,15 +2322,15 @@ function jobsList() {
   SECTIONS.forEach(s => {
     const js = jobState[s.key] || {}, has = !!state.drafts[s.key];
     const st = js.st || (has ? "done" : "pending");
-    const chip = { pending: ["Not drafted", ""], queued: ["Queued", ""], running: ["Drafting", "run"], done: ["Drafted", "ok"], error: ["Failed", "err"] }[st];
-    const words = js.st === "running" ? js.words || 0 : has ? wordCount(state.drafts[s.key]) : 0;
-    const head = el("div", { class: "jh" }, el("span", { class: "jn", text: String(s.n).padStart(2, "0") }), el("span", { text: sectionTitle(s, ctx(A())) }), el("span", { class: "jw", text: words ? `${words.toLocaleString()} w` : `~${s.words.toLocaleString()} w` }), el("span", { class: "chip " + chip[1], text: chip[0] }));
+    const chip = { pending: ["Not written", ""], queued: ["Waiting", ""], running: ["Writing", "run"], done: ["Done", "ok"], error: ["Try again", "err"] }[st];
+    const head = el("div", { class: "jh" }, el("span", { class: "jn", text: String(s.n) }), el("span", { text: sectionTitle(s, ctx(A())) }), el("span", { class: "jw", text: has && st !== "running" ? "View" : "" }), el("span", { class: "chip " + chip[1], text: chip[0] }));
     const li = el("li", { "data-k": s.key });
     if (has && st !== "running") {
-      const ta = el("textarea", { id: "d_" + s.key, "aria-label": `Edit ${s.title}`, oninput: e => { state.drafts[s.key] = e.target.value; save(); } }, state.drafts[s.key]);
-      li.append(el("details", {}, el("summary", {}, head), el("div", { class: "jb" }, ta, el("div", { class: "actions" },
-        el("button", { type: "button", class: "btn sm", disabled: !!running, onclick: () => draftAll(false, [s.key]) }, "Redraft this section"),
-        el("span", { class: "tip", style: "margin:0", text: "Edits here go straight into the Word file." })))));
+      const pv = el("div", { class: "jprev" }); let h2 = 0;
+      parseMarkup(state.drafts[s.key]).forEach(b => { if (b.t === "h2") { h2++; pv.append(el("h4", { class: "d-h2", text: `${s.n}.${h2} ${b.s}` })); } else pv.append(blockEl(b)); });
+      li.append(el("details", {}, el("summary", {}, head), el("div", { class: "jb" }, pv, el("div", { class: "actions" },
+        el("button", { type: "button", class: "btn sm", disabled: !!running, onclick: () => draftAll(false, [s.key]) }, "Rewrite this section"),
+        el("span", { class: "tip", style: "margin:0", text: "You can also edit the text in Word after downloading." })))));
     } else {
       li.append(head);
       if (js.err) li.append(el("div", { class: "jb" }, el("span", { class: "tip", style: "margin:0;color:var(--high)", text: js.err })));
@@ -2361,8 +2367,8 @@ async function draftAll(force, only) {
   await Promise.all([worker(), worker()]);
   Object.keys(jobState).forEach(k => { if (jobState[k].st === "queued") jobState[k] = {}; });
   running = null; renderReview();
-  if (denied) msg("Claude drafting wasn’t allowed in this view. Use Quick draft, or copy the prompt into a Claude chat.", true);
-  else if (SECTIONS.every(s => state.drafts[s.key])) msg("All sections drafted. Review any section below, then download the Word document.");
+  if (denied) msg("Claude wasn’t allowed to write here. Choose the Quick version instead.", true);
+  else if (SECTIONS.every(s => state.drafts[s.key])) msg("All sections are written. Open any section below to read it, then download your document.");
 }
 function stopAll() { running?.abort(); }
 function paintJob(k) { if (state.step !== REVIEW) return; const old = document.querySelector(`.jobs li[data-k="${k}"]`); if (!old) return; const fresh = jobsList().querySelector(`li[data-k="${k}"]`); old.replaceWith(fresh); }
@@ -2412,7 +2418,7 @@ renderClear(false);
 
 if (STANDALONE) {
   const w = document.querySelector("header.top");
-  w && w.after(el("div", { class: "standalone" }, el("span", {}, "You’re using the web version. Claude document reading and section drafting run in the Claude-hosted version."), el("a", { href: CLAUDE_URL, target: "_blank", rel: "noopener", class: "btn sm" }, "Open with Claude")));
+  w && w.after(el("div", { class: "standalone" }, el("span", {}, "To have Claude read your files and write your document for you, use the Claude version."), el("a", { href: CLAUDE_URL, target: "_blank", rel: "noopener", class: "btn sm" }, "Open with Claude")));
 }
 function render() { renderRail(); state.step === SAMPLE_STEP ? renderSample() : state.step >= REVIEW ? renderReview() : state.step === 0 ? renderDocs() : renderRound(state.step); }
 render();
