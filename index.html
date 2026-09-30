@@ -127,6 +127,14 @@ nav.rail button[aria-current="step"]{background:var(--surface);color:var(--ink);
 @media (max-width:860px){.reader{grid-template-columns:1fr}.d-toc{position:static;max-height:none;flex-direction:row;overflow-x:auto}.d-toc button{white-space:nowrap}.d-toch{display:none}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.paper{padding:24px 18px;max-height:none}}
 .standalone{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--mid-soft);border-radius:var(--r);padding:10px 14px;margin:-8px 0 20px;font-size:13.5px}
 .standalone a{text-decoration:none;color:var(--ink)}
+.secure{border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:18px;background:var(--surface);font-size:14px}
+.secure h3{font:600 16px var(--serif);margin:0 0 4px}
+.secure.ok{background:var(--accent-soft);border-color:transparent}
+.secure a{color:var(--accent)}
+.pickrow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:12px}
+.pickrow .fld{flex:1 1 240px}
+.pickrow input{flex:1 1 240px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .railnote{font-size:12px;color:var(--muted);margin:16px 10px 0;line-height:1.5}
 main{min-width:0}
 .eyebrow{font:500 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
@@ -1372,7 +1380,7 @@ function compactAnswers(A) {
   }));
   return o;
 }
-function sectionPrompt(sec, A) {
+function sectionPrompt(sec, A, sources) {
   const c = ctx(A);
   const t = sectionTitle(sec, c).replace(" (continued)", "");
   const fb = (FORMAT_BRIEFS[c.fk] || {})[sec.key];
@@ -1400,7 +1408,10 @@ Paragraph text. **Bold** allowed for risk-factor headings and names.
 | cell | cell |
 
 ISSUER DATA (JSON):
-${JSON.stringify(compactAnswers(A))}`;
+${JSON.stringify(compactAnswers(A))}${sources ? `
+
+SOURCE EXCERPTS (from the issuer's own uploaded documents; use them for facts and detail, but where they conflict with ISSUER DATA, ISSUER DATA wins; never copy marketing language):
+${sources}` : ""}`;
 }
 
 /* ---------- Markup → blocks ---------- */
@@ -1659,6 +1670,116 @@ function estimatePages(A, drafts) {
 
 // = { previewSections, buildDocx, flagsFor, sectionPrompt, fallback, parseMarkup, estimatePages, compactAnswers, ctx, rowsOf, isBlank };
 
+/* ================= Secure storage (Google Drive via Apps Script) ================= */
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbw8mzEJ3v9Sco3HXx_i8h7DiG9GnSg2hxBgKLAf89SrAqHLHWfnV2nXSKEep6ROENsIvg/exec";
+const UPLOAD_KINDS = ["Pitch deck / PPT", "Teaser", "Write-up / business plan", "Audited report", "Financial statements", "MD&A", "Legal / corporate", "Team / bios", "Other"];
+let backendInfo = null;          // {ok, ai} once checked
+let uploadKind = "";             // "" = detect automatically
+const hasBackend = () => /^https:\/\/script\.google\.com\//.test(BACKEND_URL);
+
+async function backend(payload, signal) {
+  const res = await fetch(BACKEND_URL, { method: "POST", body: JSON.stringify(payload), signal, redirect: "follow" });
+  if (!res.ok) throw { code: "upstream_error", message: "HTTP " + res.status };
+  return res.json();
+}
+async function checkBackend() {
+  if (!hasBackend() || !STANDALONE) return;
+  try { const r = await fetch(BACKEND_URL, { redirect: "follow" }); backendInfo = await r.json(); }
+  catch (e) { backendInfo = { ok: false }; }
+  if (backendInfo && backendInfo.ok && backendInfo.ai) { sampleFn = makeProxySample(); document.querySelector(".standalone")?.remove(); }
+  if (state.step === 0 && !extracting) renderDocs(); else if (state.step === REVIEW) renderReview();
+}
+const session = () => state.session && state.session.appId ? state.session : null;
+
+async function startSession() {
+  const email = (A().contact_email || "").trim();
+  if (isBlank(A().co_name)) throw new Error("Please enter your company’s name.");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error("Please enter a valid email address.");
+  const r = await backend({ action: "start", company: A().co_name, contact: A().contact_name || "", email });
+  if (!r.ok) throw new Error(r.error === "email" ? "Please enter a valid email address." : "The secure folder couldn’t be created. Please try again.");
+  state.session = { appId: r.appId, token: r.token, folderName: r.folderName }; save();
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(",")[1] || ""); fr.onerror = () => rej(fr.error); fr.readAsDataURL(file); });
+}
+async function uploadToDrive(file, category) {
+  const s = session(); if (!s) return { ok: false, error: "no_session" };
+  if (file.size > 30 * 1024 * 1024) return { ok: false, error: "too_large" };
+  const data = await fileToBase64(file);
+  return backend({ action: "upload", appId: s.appId, token: s.token, name: file.name, mimeType: file.type, category, data });
+}
+async function readWebsite(url) {
+  const s = session(); if (!s) throw new Error("Create your secure folder first.");
+  const r = await backend({ action: "fetchSite", appId: s.appId, token: s.token, url });
+  if (!r.ok) throw new Error("We couldn’t open that website. Check the address, or paste the text below instead.");
+  return r;
+}
+async function sendApplication(withDocx) {
+  const s = session(); if (!s) return { ok: false, error: "no_session" };
+  const r = await backend({ action: "saveAnswers", appId: s.appId, token: s.token, answers: A(), drafts: state.drafts || {} });
+  if (!r.ok) return r;
+  if (withDocx && typeof docx !== "undefined") {
+    const blob = await docx.Packer.toBlob(buildDocx(A(), effMode() === "ai" ? state.drafts : {}));
+    const f = new File([blob], `${(A().co_short || A().co_name || "Company").replace(/[^\w .-]+/g, "").trim()} - ${FORMATS[fmtKey(A().doc_format)].file} (Draft).docx`, { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+    return uploadToDrive(f, "Generated draft");
+  }
+  return r;
+}
+
+/* Claude via the backend, shaped like the in-app sample capability */
+function makeProxySample() {
+  const call = async (input, opts = {}) => {
+    const s = session();
+    if (!s) throw { code: "no_session", message: "Create your secure folder on the first page to use Claude." };
+    const prompt = typeof input === "string" ? input : input.map(t => t.content).join("\n\n");
+    let r;
+    try { r = await backend({ action: "ai", appId: s.appId, token: s.token, prompt, maxTokens: 8000 }, opts.signal); }
+    catch (e) { if (e && e.name === "AbortError") throw { code: "cancelled" }; throw { code: "upstream_error", message: String(e && e.message || e) }; }
+    if (!r.ok) throw { code: r.error === "rate_limited" ? "rate_limited" : r.error === "ai_off" ? "not_granted" : "upstream_error", message: r.error };
+    if (opts.onText) opts.onText({ text: r.text, delta: r.text });
+    return { text: r.text, truncated: r.stop === "max_tokens" };
+  };
+  const f = (input, opts) => call(input, opts);
+  f.json = async (input, opts) => {
+    const { text } = await call(input, opts);
+    try { return JSON.parse(text); } catch (e) {}
+    const m = text.match(/```(?:json)?\s*([\s\S]*?)```/) || text.match(/[\[{][\s\S]*[\]}]/);
+    try { return JSON.parse(m ? (m[1] || m[0]) : ""); } catch (e) { throw { code: "invalid_json", text }; }
+  };
+  f.limits = async () => ({ maxPromptBytes: 65536 });
+  return f;
+}
+
+/* Relevant passages from the issuer’s documents for a section draft */
+const SECTION_HINTS = {
+  intro: "company mission offering listing vision", exec: "overview business market revenue growth strengths offering listing",
+  risk_a: "risk customers competition supplier concentration loss regulation dependence", risk_b: "risk regulation jurisdiction tax currency listing shares",
+  overview: "history founded incorporated subsidiaries structure group office employees", industry: "market industry size growth trend regulation customers",
+  business: "product service technology platform patent customers suppliers milestones plan", model: "revenue pricing subscription sales marketing growth strategy kpi",
+  competition: "competitor competition advantage differentiation", mgmt: "director officer ceo cfo cto founder board experience team",
+  cap: "shares shareholders capital funding round investors convertible options", mdna: "revenue gross profit margin expenses net loss income cash debt liquidity audit",
+  proj: "forecast projection budget assumption growth", listing: "listing ipo nasdaq nyse otc exchange", securities: "shares rights voting dividend",
+  rpt: "related party director lease loan", legal: "litigation licence license approval sanctions", tax: "tax", distribution: "offering subscription placement",
+  suitability: "investor accredited", conclusion: "summary strengths risks",
+};
+function sourceExcerpts(key, budget) {
+  const words = (SECTION_HINTS[key] || "").split(/\s+/).filter(Boolean);
+  const chunks = [];
+  const srcs = docs.filter(d => d.status === "ready" && d.text).map(d => ({ name: d.name, text: d.text }));
+  if (!isBlank(A().src_website_text)) srcs.push({ name: "Website", text: A().src_website_text });
+  if (!isBlank(A().src_team_text)) srcs.push({ name: "Team notes", text: A().src_team_text });
+  srcs.forEach(s => { for (let i = 0; i < s.text.length; i += 1500) chunks.push({ name: s.name, t: s.text.slice(i, i + 1600) }); });
+  if (!chunks.length) return "";
+  const total = srcs.reduce((n, x) => n + x.text.length + x.name.length + 20, 0);
+  if (total <= budget) return srcs.map(x => `[From ${x.name}]\n${x.text}`).join("\n\n");
+  chunks.forEach(c => { const low = c.t.toLowerCase(); c.score = words.reduce((n, w) => n + (low.split(w).length - 1), 0); });
+  chunks.sort((a, b) => b.score - a.score);
+  let out = "", used = 0;
+  for (const c of chunks) { if (!c.score) break; const piece = `[From ${c.name}]\n${c.t}\n\n`; if (used + piece.length > budget) break; out += piece; used += piece.length; }
+  return out;
+}
+
 /* ================= Source documents → answers ================= */
 const DOCS_KEY = "ppm-builder-docs-v1";
 const LIBS = {
@@ -1680,18 +1801,19 @@ async function lib(name) { for (const s of LIBS[name]) await loadScript(s); }
 let docs = [];            // {id, name, size, kind, text, pages, status, err, images: Blob[] (memory only)}
 try { const d = JSON.parse(localStorage.getItem(DOCS_KEY) || "[]"); if (Array.isArray(d)) docs = d.map(x => ({ ...x, images: [] })); } catch (e) {}
 function saveDocs() {
-  try { localStorage.setItem(DOCS_KEY, JSON.stringify(docs.map(({ images, ...d }) => d))); return true; }
+  try { localStorage.setItem(DOCS_KEY, JSON.stringify(docs.map(({ images, file, ...d }) => d))); return true; }
   catch (e) { return false; }
 }
 function guessKind(name) {
   const n = name.toLowerCase();
-  if (/deck|pitch|present|investor|\.pptx?$/.test(n)) return "Pitch deck";
-  if (/audit/.test(n)) return "Audit report";
-  if (/financ|fs[\s_-]|balance|p&l|income|accounts|\.xlsx?$|\.csv$/.test(n)) return "Financial statements";
+  if (/teaser|one.?pager|onepager/.test(n)) return "Teaser";
+  if (/md&a|mdna|md-a|management.?discussion/.test(n)) return "MD&A";
+  if (/audit/.test(n)) return "Audited report";
+  if (/deck|pitch|present|\.pptx?$/.test(n)) return "Pitch deck / PPT";
+  if (/financ|fs[\s_-]|balance|p&l|income|accounts|annual.?report|\.xlsx?$|\.csv$/.test(n)) return "Financial statements";
   if (/team|bio|cv|resume|management|board|org/.test(n)) return "Team / bios";
-  if (/web|site/.test(n)) return "Website content";
-  if (/articles|constitution|charter|legal|agreement|memorandum|m&a|cap ?table|register/.test(n)) return "Legal / corporate";
-  if (/plan|strategy/.test(n)) return "Business plan";
+  if (/articles|constitution|charter|legal|agreement|m&a|cap ?table|register/.test(n)) return "Legal / corporate";
+  if (/plan|strategy|write.?up|memo|overview|profile/.test(n)) return "Write-up / business plan";
   return "Other";
 }
 
@@ -1755,7 +1877,7 @@ async function extractFile(file, imgCaps) {
   if (/\.(xlsx|xls|csv)$/.test(n)) return readSheet(file);
   if (/\.(txt|md)$/.test(n)) return { text: await file.text(), pages: null };
   if (/\.(jpe?g|png|webp|gif)$/.test(n)) {
-    if (!imgCaps) throw new Error("Images can’t be read in this view. Upload a PDF instead.");
+    if (!imgCaps) throw new Error("Images can’t be read automatically here" + (STANDALONE && hasBackend() ? ", but the file is saved for your adviser." : ". Upload a PDF instead."));
     if (file.size > imgCaps.maxInputBytes) throw new Error("This image is too large. Use a smaller image or a PDF.");
     return { text: "", pages: 1, images: [file], scanned: true };
   }
@@ -1871,27 +1993,65 @@ function renderDocs() {
     el("div", { class: "actions" }, el("button", { type: "button", class: "btn primary", onclick: () => go(SAMPLE_STEP) }, "View the sample result"),
       empty ? el("button", { type: "button", class: "btn ghost", onclick: () => go(1) }, "Skip to the questions →") : null)));
 
+  /* secure storage */
+  const secure = [];
+  if (STANDALONE && hasBackend()) {
+    const s0 = session();
+    if (!s0) {
+      const fld = (id, label, ph, type) => el("div", { class: "fld" }, el("label", { class: "l", for: "sd_" + id, text: label }),
+        el("input", { type: type || "text", id: "sd_" + id, value: A()[id] || "", placeholder: ph || "", oninput: e => { A()[id] = e.target.value; save(); } }));
+      secure.push(el("div", { class: "secure" }, el("h3", { text: "1. Your details" }),
+        el("p", { class: "tip", style: "margin:0 0 12px", text: "We create a private folder for your company in ApexCapitalAsia.Ltd’s secure Google Drive. Everything you upload is saved there for your adviser." }),
+        el("div", { class: "form" }, fld("co_name", "Company name", "e.g. Kaylen Coldchain Holdings Ltd."), fld("contact_name", "Your name"), fld("contact_email", "Your email", "name@company.com", "email")),
+        el("div", { class: "actions", style: "margin-top:12px" }, el("button", { type: "button", class: "btn primary", id: "startBtn", onclick: async e => {
+          e.target.disabled = true; docMsg = null;
+          try { await startSession(); docMsg = { t: "Your secure folder is ready. Now add your documents." }; await flushPending(); }
+          catch (err) { docMsg = { t: err.message || "Something went wrong. Please try again.", err: true }; }
+          renderRail(); renderDocs();
+        } }, "Create my secure folder"))));
+    } else {
+      secure.push(el("div", { class: "secure ok" }, el("strong", { text: "✓ Your secure folder is ready" }), el("span", { text: ` Files you add are saved to ApexCapitalAsia.Ltd’s secure Google Drive (${s0.folderName}).` })));
+    }
+    if (backendInfo && !backendInfo.ok) secure.push(el("div", { class: "msg err", text: "Secure upload is temporarily unavailable. You can still continue; please try again later." }));
+  } else if (!STANDALONE) {
+    secure.push(el("div", { class: "secure" }, el("span", { text: "To save your files in ApexCapitalAsia.Ltd’s secure Google Drive, use the web version: " }),
+      el("a", { href: "https://drmarcuzstan.github.io/fund-raising-online-application/", target: "_blank", rel: "noopener" }, "drmarcuzstan.github.io/fund-raising-online-application")));
+  }
+
   /* drop zone */
-  const accept = ".pdf,.pptx,.docx,.xlsx,.xls,.csv,.txt,.md" + (sampleCaps && sampleCaps.images ? ",.jpg,.jpeg,.png,.webp" : "");
+  const kindSel = el("select", { id: "uploadKind", onchange: e => { uploadKind = e.target.value; } }, el("option", { value: "", text: "Detect automatically" }), ...UPLOAD_KINDS.map(k => el("option", { value: k, text: k })));
+  kindSel.value = uploadKind;
+  const pick = el("div", { class: "pickrow" }, el("div", { class: "fld" }, el("label", { class: "l", for: "uploadKind", text: (STANDALONE && hasBackend() ? "2. " : "") + "What are you uploading?" }), kindSel),
+    el("label", { class: "btn primary", for: "docFiles", style: "align-self:flex-end" }, "Upload files"));
+  const accept = ".pdf,.pptx,.docx,.xlsx,.xls,.csv,.txt,.md,.jpg,.jpeg,.png,.webp";
   const input = el("input", { type: "file", id: "docFiles", multiple: true, accept, class: "visually-hidden", onchange: e => { addFiles(e.target.files); e.target.value = ""; } });
   const zone = el("label", { class: "drop", for: "docFiles",
     ondragover: e => { e.preventDefault(); zone.classList.add("over"); }, ondragleave: () => zone.classList.remove("over"),
     ondrop: e => { e.preventDefault(); zone.classList.remove("over"); addFiles(e.dataTransfer.files); } },
     el("strong", { text: "Drag your files here, or click to choose" }),
-    el("span", { text: "Pitch deck, financial statements, audit report, business plan or team profiles. PDF, PowerPoint, Word or Excel." }));
+    el("span", { text: "PPT or pitch deck, teaser, write-up, audited report, financial statements, MD&A or any other supporting document. PDF, PowerPoint, Word, Excel or images." }));
   const list = el("ul", { class: "files" });
   docs.forEach(d => {
     const status = d.status === "reading" ? el("span", { class: "chip run", text: "Reading" })
       : d.status === "error" ? el("span", { class: "chip err", text: "Can’t read" })
-      : el("span", { class: "chip ok", text: "Ready" });
+      : el("span", { class: "chip ok", text: "Read" });
+    const drive = !d.drive ? null : d.drive === "saved" ? el("span", { class: "chip ok", text: "Saved to Drive" }) : d.drive === "uploading" ? el("span", { class: "chip run", text: "Saving" }) : d.drive === "pending" ? el("span", { class: "chip", text: "Not saved yet" }) : el("span", { class: "chip err", text: "Not saved" });
     const detail = d.status === "error" ? d.err : d.status === "reading" ? "Reading the file…" :
       [d.pages ? `${d.pages} ${/\.pptx$/i.test(d.name) ? (d.pages > 1 ? "slides" : "slide") : /\.(xlsx|xls|csv)$/i.test(d.name) ? "sheet" : "page"}${d.pages > 1 && !/\.pptx$/i.test(d.name) ? "s" : ""}` : null, d.scanned && !(d.images && d.images.length) ? "little text found; if this is a scan, the Claude version may read it better" : null].filter(Boolean).join(" · ");
-    list.append(el("li", {}, el("div", { class: "fn" }, el("strong", { text: d.name }), el("span", { text: detail || fmtSize(d.size) })), status,
+    list.append(el("li", {}, el("div", { class: "fn" }, el("strong", { text: d.name }), el("span", { text: `${d.kind}${detail ? " · " + detail : ""}` })), el("div", { class: "chips" }, status, drive),
       el("button", { type: "button", class: "x", "aria-label": `Remove ${d.name}`, title: "Remove", onclick: () => { docs = docs.filter(x => x !== d); saveDocs(); renderDocs(); } }, "×")));
   });
 
-  const web = el("div", { class: "form", style: "margin-top:22px" },
-    el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_src_website_text", text: "Text from your website (optional)" }), el("div", { class: "h", text: "Open your About, Products and Team pages, copy the text and paste it here." }),
+  const siteRow = STANDALONE && hasBackend() && session() ? el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_site_url", text: "Your website" }),
+      el("div", { class: "pickrow" }, el("input", { type: "text", id: "f_site_url", value: A().co_website || "", placeholder: "www.yourcompany.com", oninput: e => { A().co_website = e.target.value; save(); } }),
+        el("button", { type: "button", class: "btn", onclick: async e => {
+          if (isBlank(A().co_website)) return; e.target.disabled = true; e.target.textContent = "Reading…";
+          try { const r = await readWebsite(A().co_website); docs = docs.filter(x => x.name !== "Website: " + A().co_website); docs.push({ id: Math.random().toString(36).slice(2), name: "Website: " + A().co_website, size: r.text.length, kind: "Website", text: r.text, pages: r.pages.length, status: "ready", drive: "saved", images: [] }); saveDocs(); docMsg = { t: `Read ${r.pages.length} page${r.pages.length > 1 ? "s" : ""} from your website and saved a copy to your folder.` }; }
+          catch (err) { docMsg = { t: err.message, err: true }; }
+          renderDocs();
+        } }, "Read my website"))) : null;
+  const web = el("div", { class: "form", style: "margin-top:22px" }, siteRow,
+    el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_src_website_text", text: siteRow ? "Or paste text from your website (optional)" : "Text from your website (optional)" }), el("div", { class: "h", text: "Open your About, Products and Team pages, copy the text and paste it here." }),
       el("textarea", { id: "f_src_website_text", rows: 5, placeholder: "Select all on each page, copy, and paste here.", oninput: e => { A().src_website_text = e.target.value; save(); } }, A().src_website_text || "")),
     el("div", { class: "fld wide" }, el("label", { class: "l", for: "f_src_team_text", text: "Your team and board (optional)" }), el("div", { class: "h", text: "Names, roles and short backgrounds. LinkedIn summaries are fine." }),
       el("textarea", { id: "f_src_team_text", rows: 5, placeholder: "e.g. Daniel Koh — Chairman & CEO, 52. Founded the company in 2019; previously…", oninput: e => { A().src_team_text = e.target.value; save(); } }, A().src_team_text || "")));
@@ -1902,9 +2062,9 @@ function renderDocs() {
   else run.append(el("button", { type: "button", class: "btn primary", disabled: !ready || !sampleFn || docs.some(d => d.status === "reading"), onclick: runExtraction }, "Fill in my answers from these files"),
     ...(!sampleFn ? [el("span", { class: "tip", style: "margin:0", text: STANDALONE ? "Reading documents with Claude runs in the Claude-hosted version (Open with Claude, above)." : "Reading documents needs Claude, which isn’t available in this view." })] : []));
 
-  m.append(el("section", { class: "panel" }, input, zone, docs.length ? list : null, web, run, docMsg ? el("div", { class: "msg" + (docMsg.err ? " err" : ""), text: docMsg.t }) : null));
+  m.append(el("section", { class: "panel" }, ...secure, input, pick, zone, docs.length ? list : null, web, run, docMsg ? el("div", { class: "msg" + (docMsg.err ? " err" : ""), text: docMsg.t }) : null));
   if (proposals) m.append(renderProposals());
-  m.append(el("p", { class: "tip" }, "Your files are read on this device and only sent to Claude when you press “Fill in my answers”."));
+  m.append(el("p", { class: "tip" }, STANDALONE && hasBackend() ? "Your files are saved privately for ApexCapitalAsia.Ltd and are read by Claude only when you press “Fill in my answers”." : "Your files are read on this device and only sent to Claude when you press “Fill in my answers”."));
   m.append(el("div", { class: "pager" }, el("span"), el("button", { type: "button", class: "btn primary", onclick: () => go(1) }, "Continue to the questions →")));
 }
 
@@ -1912,17 +2072,28 @@ async function addFiles(fileList) {
   const files = Array.from(fileList || []);
   const imgCaps = sampleCaps && sampleCaps.images ? sampleCaps.images : null;
   for (const file of files) {
-    const d = { id: Math.random().toString(36).slice(2), name: file.name, size: file.size, kind: guessKind(file.name), status: "reading", text: "", images: [] };
+    const d = { id: Math.random().toString(36).slice(2), name: file.name, size: file.size, kind: uploadKind || guessKind(file.name), status: "reading", text: "", images: [] };
+    if (STANDALONE && hasBackend()) { d.drive = session() ? "uploading" : "pending"; d.file = file; }
     docs.push(d); renderDocs();
     try {
       const r = await extractFile(file, imgCaps);
       Object.assign(d, { text: (r.text || "").slice(0, 600000), pages: r.pages, scanned: !!r.scanned, images: r.images || [], status: "ready" });
       if (!d.text.trim() && !d.images.length) { d.status = "error"; d.err = "No readable text found. If this is a scan, upload it where images are supported or paste the text."; }
     } catch (e) { d.status = "error"; d.err = e.message || String(e); }
+    if (d.drive === "uploading") await pushToDrive(d);
     if (!saveDocs()) docMsg = { t: "Documents are too large to keep on this device, so they’ll be cleared if you reload. Run Fill now.", err: false };
     renderDocs();
   }
 }
+
+async function pushToDrive(d) {
+  d.drive = "uploading"; renderDocs();
+  try { const r = await uploadToDrive(d.file, d.kind); d.drive = r && r.ok ? "saved" : "failed"; if (r && r.error === "too_large") d.err = "Too large to save (30 MB max)"; }
+  catch (e) { d.drive = "failed"; }
+  if (d.drive === "saved") delete d.file;
+  saveDocs(); renderDocs();
+}
+async function flushPending() { for (const d of docs.filter(x => x.drive === "pending" && x.file)) await pushToDrive(d); }
 
 async function runExtraction() {
   if (!sampleFn || extracting) return;
@@ -2309,6 +2480,15 @@ function renderReview() {
     if (drafted && !running) actions.append(el("button", { type: "button", class: "btn ghost", onclick: () => draftAll(true) }, "Rewrite everything"));
   }
   actions.append(el("button", { type: "button", class: M === "quick" || drafted === SECTIONS.length ? "btn primary" : "btn", disabled: !!running, onclick: downloadDocx }, "Download my document (Word)"));
+  if (typeof hasBackend === "function" && hasBackend() && STANDALONE) {
+    actions.append(el("button", { type: "button", class: "btn", disabled: !!running, onclick: async e => {
+      if (!session()) { msg("Create your secure folder on the first page (Documents) first.", true); return; }
+      e.target.disabled = true; msg("Sending your answers and document to ApexCapitalAsia.Ltd…");
+      try { const r = await sendApplication(true); msg(r && r.ok ? "Sent. ApexCapitalAsia.Ltd has received your answers, your files and the draft document." : "Sending failed. Please try again.", !(r && r.ok)); }
+      catch (err) { msg("Sending failed. Please check your connection and try again.", true); }
+      e.target.disabled = false;
+    } }, "Send to ApexCapitalAsia.Ltd"));
+  }
   gen.append(actions);
   gen.append(el("div", { class: "meter" }, el("span", {}, "About ", el("strong", { text: `${est.pages} pages` })),
     M === "ai" ? el("span", {}, el("strong", { text: `${drafted} of ${SECTIONS.length}` }), " sections written") : null));
@@ -2339,7 +2519,7 @@ function jobsList() {
   });
   return ul;
 }
-const errCopy = c => ({ not_granted: "Drafting needs permission to use Claude. Allow it when asked, or use Quick draft.", rate_limited: "Too many requests at once. Wait a minute and draft the remaining sections.", prompt_too_large: "Your answers are too long for one request. Shorten the longest answers and try again.", refused: "Claude declined to draft this section. Review the answers for it.", cancelled: "Stopped." }[c] || "Drafting failed for this section. Try it again.");
+const errCopy = c => ({ no_session: "Create your secure folder on the first page (Documents) to use Claude.", not_granted: "Drafting needs permission to use Claude. Allow it when asked, or use Quick draft.", rate_limited: "Too many requests at once. Wait a minute and draft the remaining sections.", prompt_too_large: "Your answers are too long for one request. Shorten the longest answers and try again.", refused: "Claude declined to draft this section. Review the answers for it.", cancelled: "Stopped." }[c] || "Drafting failed for this section. Try it again.");
 function msg(t, err) { const b = $("#genMsg"); if (b) b.replaceChildren(t ? el("div", { class: "msg" + (err ? " err" : ""), text: t }) : ""); }
 
 async function draftAll(force, only) {
@@ -2355,11 +2535,13 @@ async function draftAll(force, only) {
       const k = keys.shift(), s = SECTIONS.find(x => x.key === k);
       jobState[k] = { st: "running", words: 0 }; paintJob(k);
       try {
-        const res = await sampleFn(sectionPrompt(s, A()), { signal: running.signal, modelTier: "default", onText: ({ text }) => { jobState[k].words = wordCount(text); paintWords(k); } });
+        const base = sectionPrompt(s, A()), room = 60000 - new TextEncoder().encode(base).length - 800;
+        const src = room > 3000 && typeof sourceExcerpts === "function" ? sourceExcerpts(k, Math.min(room, 28000)) : "";
+        const res = await sampleFn(src ? sectionPrompt(s, A(), src) : base, { signal: running.signal, modelTier: "default", onText: ({ text }) => { jobState[k].words = wordCount(text); paintWords(k); } });
         state.drafts[k] = res.text.trim(); jobState[k] = { st: "done" }; save();
       } catch (e) {
         if (e && e.code === "cancelled") { stopped = true; jobState[k] = {}; }
-        else { jobState[k] = { st: "error", err: errCopy(e && e.code) }; if (e && (e.code === "not_granted" || e.code === "sampling_disabled")) denied = true; if (e && e.code === "rate_limited") stopped = true; }
+        else { jobState[k] = { st: "error", err: errCopy(e && e.code) }; if (e && (e.code === "not_granted" || e.code === "sampling_disabled" || e.code === "no_session")) denied = e.code; if (e && e.code === "rate_limited") stopped = true; }
       }
       paintJob(k);
     }
@@ -2367,7 +2549,8 @@ async function draftAll(force, only) {
   await Promise.all([worker(), worker()]);
   Object.keys(jobState).forEach(k => { if (jobState[k].st === "queued") jobState[k] = {}; });
   running = null; renderReview();
-  if (denied) msg("Claude wasn’t allowed to write here. Choose the Quick version instead.", true);
+  if (denied === "no_session") msg("Create your secure folder on the first page (Documents), then press Start writing again.", true);
+  else if (denied) msg("Claude wasn’t allowed to write here. Choose the Quick version instead.", true);
   else if (SECTIONS.every(s => state.drafts[s.key])) msg("All sections are written. Open any section below to read it, then download your document.");
 }
 function stopAll() { running?.abort(); }
@@ -2383,6 +2566,7 @@ async function downloadDocx() {
     const blob = await docx.Packer.toBlob(doc);
     const name = ((A().co_short || A().co_name || "Company").replace(/[^\w .-]+/g, "").trim() || "Company") + " - " + FORMATS[fmtKey(A().doc_format)].file + " (Draft).docx";
     await saveFile({ filename: name, data: blob });
+    if (typeof session === "function" && session()) sendApplication(true).catch(() => {});
     msg("Saved. When Word asks to update fields, choose Yes to fill the table of contents.");
   } catch (e) {
     msg(e && e.code === "declined" ? "Download cancelled." : e && e.code === "rate_limited" ? "A save prompt is already open. Finish it first." : "Couldn’t build the document: " + (e && e.message || e), e && e.code !== "declined");
@@ -2423,6 +2607,7 @@ if (STANDALONE) {
 function render() { renderRail(); state.step === SAMPLE_STEP ? renderSample() : state.step >= REVIEW ? renderReview() : state.step === 0 ? renderDocs() : renderRound(state.step); }
 render();
 
+if (typeof checkBackend === "function") checkBackend();
 (async () => {
   if (!window.claude || !window.claude.use) return;
   try { sampleFn = await window.claude.use("sample"); } catch (e) { sampleFn = null; }
