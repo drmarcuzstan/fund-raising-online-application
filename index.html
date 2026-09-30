@@ -43,6 +43,7 @@ header.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;justify-
 .tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .save{font-size:12px;color:var(--muted);font-family:var(--mono)}
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:7px 13px;cursor:pointer;font-size:14px;font-weight:500;line-height:1.3}
+a.btn{display:inline-block;text-decoration:none;color:var(--ink)}
 .btn:hover{border-color:var(--muted)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.primary:hover{filter:brightness(1.07)}
@@ -127,6 +128,10 @@ nav.rail button[aria-current="step"]{background:var(--surface);color:var(--ink);
 @media (max-width:860px){.reader{grid-template-columns:1fr}.d-toc{position:static;max-height:none;flex-direction:row;overflow-x:auto}.d-toc button{white-space:nowrap}.d-toch{display:none}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.paper{padding:24px 18px;max-height:none}}
 .standalone{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--mid-soft);border-radius:var(--r);padding:10px 14px;margin:-8px 0 20px;font-size:13.5px}
 .standalone a{text-decoration:none;color:var(--ink)}
+.welcome{display:flex;flex-wrap:wrap;gap:14px 24px;justify-content:space-between;align-items:flex-start;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:var(--r);padding:14px 16px;margin:6px 0 18px;background:var(--surface);font-size:14px}
+.welcome ol{margin:6px 0 0;padding-left:20px;line-height:1.6}
+.welcome .wact{display:flex;flex-direction:column;gap:8px;align-items:flex-start;max-width:260px}
+.welcome .wact .tip{margin:0}
 .secure{border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:18px;background:var(--surface);font-size:14px}
 .secure h3{font:600 16px var(--serif);margin:0 0 4px}
 .secure.ok{background:var(--accent-soft);border-color:transparent}
@@ -147,7 +152,7 @@ h2.step{font:600 28px/1.2 var(--serif);margin:6px 0 8px;text-wrap:balance}
 .fld.wide{grid-column:1/-1}
 .fld label.l{font-weight:500;font-size:14px}
 .fld .h{font-size:12.5px;color:var(--muted);margin-top:-2px}
-input[type=text],input:not([type]),select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;font-size:14.5px}
+input[type=text],input[type=email],input:not([type]),select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;font-size:14.5px}
 textarea{resize:vertical;min-height:84px;line-height:1.5}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .num-in{font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -261,7 +266,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
     <div class="brand">
       <div class="mark"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 4 L29 27 H22.5 L16 15.5 L9.5 27 H3 Z" fill="var(--accent)"/><path d="M16 19 L19.4 25 H12.6 Z" fill="var(--gold)"/></svg><span class="wm">ApexCapitalAsia<b>.Ltd</b></span></div>
       <h1>Fund Raising Online Application</h1>
-      <p>Prepare the offering document for your fundraise and U.S. stock-market listing</p>
+      <p>An AI:Xcelerator programme · Prepare the offering document for your fundraise and U.S. stock-market listing</p>
     </div>
     <div class="tools">
       <span class="save" id="saveState" aria-live="polite"></span>
@@ -1980,11 +1985,19 @@ function mergeInto(acc, fields) {
 }
 
 /* ---------- Docs step UI ---------- */
+const GUIDE_URL = "https://drmarcuzstan.github.io/fund-raising-online-application/AI-Xcelerator-Applicant-Guide.pdf";
 let sampleCaps = null, extracting = null, proposals = null, docMsg = null;
 function fmtSize(b) { return b > 1e6 ? (b / 1e6).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1e3)) + " KB"; }
 function renderDocs() {
   const m = $("#main"); m.replaceChildren();
-  m.append(el("div", { class: "eyebrow", text: "Start here" }), el("h2", { class: "step", text: "Welcome. Let’s prepare your offering document" }),
+  m.append(el("div", { class: "eyebrow", text: "AI:Xcelerator by ApexCapitalAsia.Ltd" }), el("h2", { class: "step", text: "Welcome to AI:Xcelerator’s Fund Raising Online Application" }),
+    el("p", { class: "blurb", style: "margin-bottom:10px", text: "To help us evaluate your company and understand your fund-raising needs, please complete the information below. Our team will review your submission and contact you afterwards." }),
+    el("p", { class: "blurb", text: "The information you provide allows us to prepare a comprehensive Private Placement Memorandum (PPM) and to determine the most suitable route for your fund raise." }),
+    el("div", { class: "welcome" },
+      el("div", {}, el("strong", { text: "How it works" }),
+        el("ol", {}, ...["Enter your details and create your secure folder", "Upload your documents and website; we fill in the answers for you", "Check the answers and complete ten short rounds of questions", "Download your draft and send it to us"].map(t => el("li", { text: t })))),
+      el("div", { class: "wact" }, el("a", { class: "btn", href: GUIDE_URL, target: "_blank", rel: "noopener", download: "" }, "Download instructions (PDF)"),
+        el("span", { class: "tip", text: "Takes about 45–90 minutes. You can stop and continue later." }))),
     el("p", { class: "blurb", text: "Upload the documents you already have and we’ll fill in as many answers as possible for you. You check each answer before it’s used. No documents? Skip this step and answer the questions directly." }));
 
   const empty = Object.keys(A()).every(k => isBlank(A()[k])) && !docs.length;
